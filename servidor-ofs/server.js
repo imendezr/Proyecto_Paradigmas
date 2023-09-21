@@ -16,15 +16,15 @@ if (!fs.existsSync(SCRIPTS_DIR)) {
 
 // Configura CORS
 app.use(cors({
-  origin: 'http://localhost:3000', // Permite las solicitudes desde este origen
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type"]
+    origin: 'http://localhost:3000', // Permite las solicitudes desde este origen
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json()); // Middleware para parsear JSON
 
 app.get('/', (req, res) => {
-  res.send('Servidor OFS en funcionamiento!');
+    res.send('Servidor OFS en funcionamiento!');
 });
 
 function emulateOFSExecution(code) {
@@ -34,14 +34,14 @@ function emulateOFSExecution(code) {
 }
 
 app.post('/compile', (req, res) => {
-    const { code } = req.body;
+    const {code} = req.body;
 
     console.log("Código recibido para compilar:", code); // Permite saber si el código llega al servidor
 
     const timestamp = new Date().toISOString();
     const transpiledCode = `${timestamp}\n${code}`;
 
-    res.json({ 
+    res.json({
         success: true,
         input: code,
         output: transpiledCode
@@ -60,7 +60,7 @@ function readFromFile(scriptName) {
 }
 
 app.post('/api/save', (req, res) => {
-    const { scriptName, code } = req.body;
+    const {scriptName, code} = req.body;
 
     if (!scriptName || !code || typeof scriptName !== "string" || typeof code !== "string") {
         return res.status(400).json({
@@ -85,8 +85,8 @@ app.post('/api/save', (req, res) => {
 });
 
 app.get('/api/retrieve/:scriptName', (req, res) => {
-    const { scriptName } = req.params;
-	console.log("Intentando recuperar el script:", scriptName); // Log para debugging
+    const {scriptName} = req.params;
+    console.log("Intentando recuperar el script:", scriptName); // Log para debugging
 
     try {
         const code = readFromFile(scriptName);
@@ -116,5 +116,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

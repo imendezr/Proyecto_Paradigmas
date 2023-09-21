@@ -8,13 +8,13 @@ export const saveScript = async (scriptName, code) => {
         });
 
         if (response.data.success) {
-            return { success: true, message: "Script guardado con éxito." };
+            return {success: true, message: "Script guardado con éxito."};
         } else {
-            return { success: false, message: response.data.message };
+            return {success: false, message: response.data.message};
         }
     } catch (error) {
         console.error("Error al guardar el script:", error);
-        return { success: false, message: "Error al guardar el script." };
+        return {success: false, message: "Error al guardar el script."};
     }
 };
 
@@ -23,13 +23,13 @@ export const retrieveScript = async (scriptName) => {
         const response = await axios.get(`http://localhost:3001/api/retrieve/${scriptName}`);
 
         if (response.data.success) {
-            return { success: true, code: response.data.code, message: "Script recuperado con éxito." };
+            return {success: true, code: response.data.code, message: "Script recuperado con éxito."};
         } else {
-            return { success: false, message: response.data.message };
+            return {success: false, message: response.data.message};
         }
     } catch (error) {
         console.error("Error al recuperar el script:", error);
-        return { success: false, message: "Error al recuperar el script." };
+        return {success: false, message: "Error al recuperar el script."};
     }
 };
 
@@ -40,12 +40,12 @@ export const sendCodeToServer = async (codeToSend) => {
         });
 
         if (response.data.success) {
-            return { success: true, transpiledCode: response.data.output };
+            return {success: true, transpiledCode: response.data.output};
         } else {
-            return { success: false, message: response.data.message || "Error al procesar el código." };
+            return {success: false, message: response.data.message || "Error al procesar el código."};
         }
     } catch (error) {
         console.error("Error al enviar el código al servidor:", error);
-        return { success: false, message: "Error al comunicarse con el servidor." };
+        return {success: false, message: "Error al comunicarse con el servidor."};
     }
 };
