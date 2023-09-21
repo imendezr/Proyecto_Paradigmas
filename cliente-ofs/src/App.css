@@ -1,38 +1,145 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --background-main: #F8F4EA;
+    --background-container: #ECE8DD;
+    --primary-color: #579BB1;
+    --button-color: #8AC5D2;
+    --border-shadow: #E1D7C6;
+    --text-main: #333;
+}
+
+body {
+    background-color: var(--background-main);
+    margin: 0;
+    font-family: sans-serif;
+    color: var(--text-main); 
+}
+
 .App {
-  text-align: center;
+    background-color: var(--background-main);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    color: var(--text-main);
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    height: 40vmin;
+    pointer-events: none;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: var(--primary-color);
+    color: var(--background-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
 }
 
-.App-link {
-  color: #61dafb;
+.Code {
+    display: flex;
+    width: 100%;
+}
+
+.EA, .TA {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.EA {
+    justify-content: flex-start;
+}
+
+.TA {
+    justify-content: flex-end;
+}
+
+.EA textarea, .TA textarea, .RA textarea {
+    width: 100%;
+    resize: none;
+	box-shadow: 0px 0px 10px var(--border-shadow);
+}
+
+.Console {
+    width: 100%;
+}
+
+.RA {
+    width: 100%;
+}
+
+.menuContainer {
+	background-color: var(--primary-color);
+    color: var(--background-main);
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.prefContainer {
+    position: relative;
+}
+
+.preferencesDropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--background-container);
+    padding: 10px;
+    border: 1px solid var(--border-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+	box-shadow: 0px 0px 10px var(--border-shadow);
+	color: var(--text-main);
+}
+
+button, .button {
+    background-color: var(--button-color);
+    color: var(--text-main);
+    border: none;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+	border-radius: 5px;
+	margin: 2px;
+}
+
+.menuContainer button, .menuContainer .button {
+	padding: 10px 20px;
+	border-radius: 20px;
+}
+
+.menuContainer button:hover, .menuContainer .button:hover {
+    background-color: #7B9CA5;
+}
+
+button:hover, .button:hover {
+    background-color: var(--primary-color);
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
