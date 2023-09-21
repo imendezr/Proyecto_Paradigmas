@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { saveScript, retrieveScript } from '../api/scripts';
+import { saveScript, retrieveScript } from '../../api/scripts';
 
 const Editor = ({ setConsoleMessage, onCodeChange }) => {
   const [code, setCode] = useState('');

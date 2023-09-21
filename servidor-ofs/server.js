@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors'); // Cross-Origin Resource Sharing
-const fs = require('fs');       // Importando el módulo fs
-const path = require('path');   // Importando el módulo path
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = 3001;
@@ -86,6 +86,7 @@ app.post('/api/save', (req, res) => {
 
 app.get('/api/retrieve/:scriptName', (req, res) => {
     const { scriptName } = req.params;
+	console.log("Intentando recuperar el script:", scriptName); // Log para debugging
 
     try {
         const code = readFromFile(scriptName);

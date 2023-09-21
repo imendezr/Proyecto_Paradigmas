@@ -40,7 +40,7 @@ export const sendCodeToServer = async (codeToSend) => {
         });
 
         if (response.data.success) {
-            return { success: true, transpiledCode: response.data.output }; // Cambio aquí: de 'output' a 'transpiledCode'
+            return { success: true, transpiledCode: response.data.output };
         } else {
             return { success: false, message: response.data.message || "Error al procesar el código." };
         }
