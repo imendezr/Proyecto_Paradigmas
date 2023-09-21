@@ -1,5 +1,3 @@
-// components/Output.js
-
 import React from 'react';
 
 const Output = ({ result }) => {
