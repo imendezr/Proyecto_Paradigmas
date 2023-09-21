@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Editor from './components/Editor/Editor';
-import Output from './components/Output/Output';
+import Editor from './components/Editor';
+import Output from './components/Output';
 import { sendCodeToServer } from './api/scripts'; 
 import './App.css';
 
