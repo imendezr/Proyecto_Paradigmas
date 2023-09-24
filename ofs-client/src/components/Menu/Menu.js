@@ -22,7 +22,7 @@ import AboutButton from './AboutButton';
 import PreferencesButton from './PreferencesButton';
 import PreferencesDropdown from './PreferencesDropdown';
 
-function Menu({ preferences, updatePreference }) {
+function Menu({preferences, updatePreference}) {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
 
     const handleAboutClick = () => {

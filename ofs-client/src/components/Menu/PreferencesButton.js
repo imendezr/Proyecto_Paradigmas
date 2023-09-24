@@ -14,7 +14,7 @@
 
 import React from 'react';
 
-const PreferencesButton = ({ onClick }) => {
+const PreferencesButton = ({onClick}) => {
     return (
         <button className="preferencesButton" onClick={onClick}>Preferencias</button>
     );

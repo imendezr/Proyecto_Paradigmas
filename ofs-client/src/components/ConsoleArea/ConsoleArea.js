@@ -13,7 +13,7 @@
  Un botón para compilar el código y un área de texto para mostrar los mensajes de la consola.
  */
 
-function ConsoleArea({ message, onCompile }) {
+function ConsoleArea({message, onCompile}) {
     return (
         <div className="Console">
             <div className="RA">

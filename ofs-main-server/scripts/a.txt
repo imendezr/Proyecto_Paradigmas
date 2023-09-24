@@ -1,9 +1,0 @@
-dfjlskjf() {
-
-2 + 2;
-sdfkj => ()dfs;
-
-
-fd;
-
-}

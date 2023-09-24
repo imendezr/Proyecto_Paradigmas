@@ -1,15 +1,14 @@
 /**
- # Configuración del servidor principal OFS
+ # Configuración del servidor de persistencia OFS
 
- Este documento describe la configuración del servidor principal que actúa como
- un intermediario entre el cliente y el servidor de lógica de negocios.
+ Este documento describe cómo el servidor de persistencia de OFS maneja
+ las solicitudes relacionadas con la persistencia de scripts.
 
  Para empezar, primero importamos las bibliotecas necesarias:
  */
 
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
@@ -19,7 +18,7 @@ const path = require('path');
  Establecemos el puerto y la ubicación donde se guardarán los scripts.
  */
 
-const PORT = 3005;
+const PORT = 3006;
 const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 
 /**
@@ -37,7 +36,7 @@ const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3005',
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -45,15 +44,9 @@ app.use(cors({
 app.use(express.json());
 
 /**
- ## Rutas del servidor
+ ## Funciones de ayuda para la persistencia de datos
 
- Definimos las rutas que manejará el servidor.
- */
-
-app.get('/', (_, res) => res.send('Servidor principal OFS en funcionamiento!'));
-
-/**
- El servidor también permitirá guardar y recuperar scripts por nombre.
+ Estas funciones permiten guardar y leer scripts del disco.
  */
 
 const saveToFile = (scriptName, code) =>
@@ -64,38 +57,33 @@ const readFromFile = scriptName =>
         ? fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8')
         : null;
 
-app.post('/api/save', async (req, res) => {
+/**
+ ## Rutas del servidor
+
+ Definimos las rutas que manejarán las operaciones de persistencia.
+ */
+
+app.post('/api/save', (req, res) => {
     const {scriptName, code} = req.body;
 
     try {
-        const response = await axios.post('http://localhost:3006/api/save', {scriptName, code});
-        res.json(response.data);
+        saveToFile(scriptName, code);
+        res.json({success: true, message: `Script ${scriptName} guardado con éxito.`});
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de persistencia:", error);
         res.status(500).json({success: false, message: "Error al guardar el script."});
     }
 });
 
-app.get('/api/retrieve/:scriptName', async (req, res) => {
+app.get('/api/retrieve/:scriptName', (req, res) => {
     const {scriptName} = req.params;
 
     try {
-        const response = await axios.get(`http://localhost:3006/api/retrieve/${scriptName}`);
-        res.json(response.data);
+        const code = readFromFile(scriptName);
+        code
+            ? res.json({success: true, code})
+            : res.status(404).json({success: false, message: `Script ${scriptName} no encontrado.`});
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de persistencia:", error);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
-    }
-});
-
-app.post('/api/compile', async (req, res) => {
-    const { code } = req.body;
-    try {
-        const response = await axios.post('http://localhost:3001/compile', { code });
-        res.json(response.data);
-    } catch (error) {
-        console.error("Error al comunicarse con el servidor de lógica:", error);
-        res.status(500).json({ success: false, message: "Error al comunicarse con el servidor de lógica." });
     }
 });
 
@@ -110,4 +98,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => console.log(`Servidor principal corriendo en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Servidor de persistencia corriendo en http://localhost:${PORT}`));

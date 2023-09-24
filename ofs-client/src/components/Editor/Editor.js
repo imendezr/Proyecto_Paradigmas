@@ -24,7 +24,7 @@ import {retrieveScript, saveScript} from '../../api/scripts';
  - `scriptName`: El nombre bajo el cual se guardará o se ha guardado un script.
  */
 
-const Editor = ({ code, setConsoleMessage, onCodeChange }) => {
+const Editor = ({code, setConsoleMessage, onCodeChange}) => {
     const [scriptName, setScriptName] = useState('');
 
     /**

@@ -6,39 +6,46 @@
 
 import axios from 'axios';
 
-export const saveScript = async (scriptName, code) => {
-    try {
-        const response = await axios.post('http://localhost:3005/api/save', { scriptName, code });
-        return response.data.success
-            ? { success: true, message: "Script guardado con éxito." }
-            : { success: false, message: response.data.message };
-    } catch (error) {
-        console.error("Error al guardar el script:", error);
-        return { success: false, message: "Error al guardar el script." };
-    }
-};
+const SERVER_URL = 'http://localhost:3005';
 
-export const retrieveScript = async scriptName => {
-    try {
-        const response = await axios.get(`http://localhost:3005/api/retrieve/${scriptName}`);
-        return response.data.success
-            ? { success: true, code: response.data.code, message: "Script recuperado con éxito." }
-            : { success: false, message: response.data.message };
-    } catch (error) {
-        console.error("Error al recuperar el script:", error);
-        return { success: false, message: "Error al recuperar el script." };
-    }
-};
+/**
+ * Envía el script al servidor y devuelve la respuesta.
+ */
+const postToServer = (endpoint, data) => axios.post(`${SERVER_URL}${endpoint}`, data).then(response => response.data);
 
-export const sendCodeToServer = async codeToSend => {
-    try {
-        const response = await axios.post('http://localhost:3005/api/compile', { code: codeToSend });
-        console.log("Respuesta del servidor:", response.data);
-        return response.data.success
-            ? { success: true, output: response.data.output }
-            : { success: false, message: response.data.message || "Error al procesar el código." };
-    } catch (error) {
-        console.error("Error al enviar el código al servidor:", error);
-        return { success: false, message: "Error al comunicarse con el servidor." };
-    }
-};
+const saveScript = (scriptName, code) =>
+    postToServer('/api/save', {scriptName, code})
+        .then(response => ({
+            success: response.success,
+            message: response.success ? "Script guardado con éxito." : response.message
+        }))
+        .catch(error => {
+            console.error("Error al guardar el script:", error);
+            return {success: false, message: "Error al guardar el script."};
+        });
+
+const retrieveScript = scriptName =>
+    axios.get(`${SERVER_URL}/api/retrieve/${scriptName}`)
+        .then(response => ({
+            success: response.data.success,
+            code: response.data.code,
+            message: response.data.success ? "Script recuperado con éxito." : response.data.message
+        }))
+        .catch(error => {
+            console.error("Error al recuperar el script:", error);
+            return {success: false, message: "Error al recuperar el script."};
+        });
+
+const sendCodeToServer = codeToSend =>
+    postToServer('/api/compile', {code: codeToSend})
+        .then(response => ({
+            success: response.success,
+            output: response.success ? response.output : "Error al procesar el código.",
+            message: response.message
+        }))
+        .catch(error => {
+            console.error("Error al enviar el código al servidor:", error);
+            return {success: false, message: "Error al comunicarse con el servidor."};
+        });
+
+export {saveScript, retrieveScript, sendCodeToServer};

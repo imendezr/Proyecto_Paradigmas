@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-const PreferencesDropdown = ({ preferences, updatePreference }) => {
+const PreferencesDropdown = ({preferences, updatePreference}) => {
     const handleThemeChange = (event) => {
         const theme = event.target.checked ? 'dark' : 'light';
         updatePreference('theme', theme);
