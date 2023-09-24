@@ -1,120 +1,123 @@
+/**
+ # Configuración del servidor OFS
+
+ Este documento describe la configuración de un servidor OFS y cómo maneja
+ las solicitudes relacionadas con la compilación y gestión de scripts.
+
+ Para empezar, primero importamos las bibliotecas necesarias:
+ */
+
 const express = require('express');
-const cors = require('cors'); // Cross-Origin Resource Sharing
+const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 
-const app = express();
-const PORT = 3001;
+/**
+ ## Configuración básica del servidor
 
-// Directorio para los scripts
+ Establecemos el puerto y la ubicación donde se guardarán los scripts.
+ */
+
+const PORT = 3001;
 const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 
-// Crea el directorio si no existe
-if (!fs.existsSync(SCRIPTS_DIR)) {
-    fs.mkdirSync(SCRIPTS_DIR);
-}
+/**
+ Ahora, creamos el directorio donde se guardarán los scripts si aún no existe.
+ */
 
-// Configura CORS
+(fs.existsSync(SCRIPTS_DIR) || fs.mkdirSync(SCRIPTS_DIR));
+
+/**
+ ## Configuración de Express y CORS
+
+ A continuación, configuramos la aplicación Express y definimos las políticas de CORS.
+ */
+
+const app = express();
+
 app.use(cors({
-    origin: 'http://localhost:3000', // Permite las solicitudes desde este origen
+    origin: 'http://localhost:3000',
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
 
-app.use(express.json()); // Middleware para parsear JSON
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Servidor OFS en funcionamiento!');
-});
+/**
+ ## Rutas del servidor
 
-function emulateOFSExecution(code) {
-    // Por el momento retorna el mismo código con una notación.
-    // En el futuro procesará el código OFS y lo convierte a JS.
-    return `Emulated OFS: ${code}`;
-}
+ Definimos las rutas que manejará el servidor.
+ */
+
+app.get('/', (_, res) => res.send('Servidor OFS en funcionamiento!'));
 
 app.post('/compile', (req, res) => {
     const {code} = req.body;
-
-    console.log("Código recibido para compilar:", code); // Permite saber si el código llega al servidor
-
+    console.log("Código recibido para compilar:", code);
     const timestamp = new Date().toISOString();
-    const transpiledCode = `${timestamp}\n${code}`;
-
+    const output = `${timestamp}\n${code}`;
+    console.log("Respuesta enviada:", output);
     res.json({
         success: true,
         input: code,
-        output: transpiledCode
+        output: `${timestamp}\n${code}`
     });
 });
 
-function saveToFile(scriptName, code) {
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), code);
-}
+/**
+ El servidor también permitirá guardar y recuperar scripts por nombre.
+ */
 
-function readFromFile(scriptName) {
-    if (fs.existsSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`))) {
-        return fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8');
-    }
-    return null;
-}
+const saveToFile = (scriptName, code) =>
+    fs.writeFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), code);
+
+const readFromFile = scriptName =>
+    fs.existsSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`))
+        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8')
+        : null;
 
 app.post('/api/save', (req, res) => {
     const {scriptName, code} = req.body;
+    const validInput = scriptName && code && typeof scriptName === "string" && typeof code === "string";
 
-    if (!scriptName || !code || typeof scriptName !== "string" || typeof code !== "string") {
-        return res.status(400).json({
-            success: false,
-            message: "Nombre del script o código no válido."
-        });
-    }
-
-    try {
-        saveToFile(scriptName, code);
-        res.json({
-            success: true,
-            message: `Script ${scriptName} guardado con éxito.`
-        });
-    } catch (error) {
-        console.error("Error al guardar el script:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error al guardar el script."
-        });
+    if (validInput) {
+        try {
+            saveToFile(scriptName, code);
+            res.json({ success: true, message: `Script ${scriptName} guardado con éxito.` });
+        } catch (error) {
+            console.error("Error al guardar el script:", error);
+            res.status(500).json({ success: false, message: "Error al guardar el script." });
+        }
+    } else {
+        res.status(400).json({ success: false, message: "Nombre del script o código no válido." });
     }
 });
 
 app.get('/api/retrieve/:scriptName', (req, res) => {
     const {scriptName} = req.params;
-    console.log("Intentando recuperar el script:", scriptName); // Log para debugging
+    console.log("Intentando recuperar el script:", scriptName);
 
     try {
         const code = readFromFile(scriptName);
-        if (code) {
-            res.json({
-                success: true,
-                code: code
-            });
-        } else {
-            res.status(404).json({
-                success: false,
-                message: `Script ${scriptName} no encontrado.`
-            });
-        }
+        code
+            ? res.json({ success: true, code })
+            : res.status(404).json({ success: false, message: `Script ${scriptName} no encontrado.` });
     } catch (error) {
         console.error("Error al recuperar el script:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error al recuperar el script."
-        });
+        res.status(500).json({ success: false, message: "Error al recuperar el script." });
     }
 });
 
-app.use((err, req, res, next) => {
+/**
+ ## Manejo de errores y puesta en marcha del servidor
+
+ Finalmente, configuramos el servidor para manejar errores inesperados y lo ponemos en marcha.
+ */
+
+app.use((err, req, res) => {
+    err.stack = undefined;
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));

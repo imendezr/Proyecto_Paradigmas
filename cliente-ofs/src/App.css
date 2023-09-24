@@ -9,13 +9,24 @@
     --button-color: #8AC5D2;
     --border-shadow: #E1D7C6;
     --text-main: #333;
+    --text-area-bg: #FFF;
+}
+
+[data-theme="dark"] {
+    --background-main: #2C2C2C;
+    --background-container: #453453;
+    --primary-color: #7E63A1;
+    --button-color: #9C7DBD;
+    --border-shadow: #161616;
+    --text-main: #FFFFFF;
+    --text-area-bg: #3A3A3A;
 }
 
 body {
     background-color: var(--background-main);
     margin: 0;
     font-family: sans-serif;
-    color: var(--text-main); 
+    color: var(--text-main);
 }
 
 .App {
@@ -35,7 +46,7 @@ body {
 
 .App-header {
     background-color: var(--primary-color);
-    color: var(--background-main);
+    color: var(--text-area-bg);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -66,11 +77,23 @@ body {
 .EA textarea, .TA textarea, .RA textarea {
     width: 100%;
     resize: none;
-	box-shadow: 0 0 10px var(--border-shadow);
+    box-shadow: 0 0 10px var(--border-shadow);
+    background-color: var(--text-area-bg);
+    color: var(--text-main);
+}
+
+.RA textarea {
+    height: 120px;
+}
+
+input {
+    background-color: var(--text-area-bg);
+    color: var(--text-main);
 }
 
 .Console {
     width: 100%;
+    margin-bottom: 217px;
 }
 
 .RA {
@@ -78,17 +101,35 @@ body {
 }
 
 .menuContainer {
-	background-color: var(--primary-color);
-    color: var(--background-main);
+    min-height: 80px;
+    background-color: var(--primary-color);
+    color: var(--text-area-bg);
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
+    flex-wrap: nowrap;
+}
+
+.menuContainer h1 {
+    text-align: center;
+    margin: 0 10px;
+    white-space: nowrap;  /* Evita que el título se rompa en líneas */
+    overflow: hidden;  /* Esconde cualquier texto que exceda el ancho máximo */
+    text-overflow: ellipsis;  /* Muestra puntos suspensivos si el título es demasiado largo */
+}
+
+.AboutButton, .prefContainer {
+    flex: 0 0 auto; /* No crece, no se reduce y no tiene una base flexible. */
 }
 
 .prefContainer {
     position: relative;
+}
+
+.preferencesDropdown input {
+    box-shadow: none;
 }
 
 .preferencesDropdown {
@@ -101,9 +142,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-	box-shadow: 0 0 10px var(--border-shadow);
-	color: var(--text-main);
-	border-radius: 20px;
+    box-shadow: 0 0 10px var(--border-shadow);
+    color: var(--text-main);
+    border-radius: 20px;
 }
 
 button, .button {
@@ -113,13 +154,13 @@ button, .button {
     padding: 3px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-	border-radius: 5px;
-	margin: 2px;
+    border-radius: 5px;
+    margin: 2px;
 }
 
 .menuContainer button, .menuContainer .button {
-	padding: 10px 20px;
-	border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 20px;
 }
 
 .menuContainer button:hover, .menuContainer .button:hover {
