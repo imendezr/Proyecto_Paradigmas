@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import Editor from './components/Editor/Editor';
-import ScriptManager from './components/Editor/ScriptManager';
 import Output from './components/Output/Output';
 import Menu from './components/Menu/Menu';
 import {sendCodeToServer} from './api/scripts';
@@ -45,7 +44,6 @@ function App() {
             <Menu preferences={preferences} updatePreference={updatePreference}/>
             <div className="Code">
                 <div className="EA">
-                    <ScriptManager/>
                     <Editor
                         setConsoleMessage={setConsoleMessage}
                         onCodeChange={handleCodeChange}

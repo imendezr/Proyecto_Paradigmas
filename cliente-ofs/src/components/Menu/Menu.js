@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
-import MenuButton from './MenuButton';
+import AboutButton from './AboutButton';
 import PreferencesButton from './PreferencesButton';
 import PreferencesDropdown from './PreferencesDropdown';
 
 function Menu({preferences, updatePreference}) {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
 
+    const handleAboutClick = () => {
+        // Implementar funcionalidad para "Acerca de"
+    };
+
     return (
         <div className="menuContainer">
-            <MenuButton href="#about" label="Acerca de"/>
+            <AboutButton onClick={handleAboutClick} />
             <h1>Prototipo: Entorno OneFlowStream (OFS)</h1>
             <div className="prefContainer">
                 <PreferencesButton onClick={() => setPreferencesOpen(!isPreferencesOpen)}/>
@@ -20,4 +24,3 @@ function Menu({preferences, updatePreference}) {
 }
 
 export default Menu;
-export {MenuButton};

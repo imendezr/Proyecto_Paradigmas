@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'; // Solicitudes HTTP
 
 export const saveScript = async (scriptName, code) => {
     try {
