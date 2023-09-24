@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export const saveScript = async (scriptName, code) => {
     try {
-        const response = await axios.post('http://localhost:3001/api/save', { scriptName, code });
+        const response = await axios.post('http://localhost:3005/api/save', { scriptName, code });
         return response.data.success
             ? { success: true, message: "Script guardado con éxito." }
             : { success: false, message: response.data.message };
@@ -20,7 +20,7 @@ export const saveScript = async (scriptName, code) => {
 
 export const retrieveScript = async scriptName => {
     try {
-        const response = await axios.get(`http://localhost:3001/api/retrieve/${scriptName}`);
+        const response = await axios.get(`http://localhost:3005/api/retrieve/${scriptName}`);
         return response.data.success
             ? { success: true, code: response.data.code, message: "Script recuperado con éxito." }
             : { success: false, message: response.data.message };
@@ -32,7 +32,7 @@ export const retrieveScript = async scriptName => {
 
 export const sendCodeToServer = async codeToSend => {
     try {
-        const response = await axios.post('http://localhost:3001/compile', { code: codeToSend });
+        const response = await axios.post('http://localhost:3005/api/compile', { code: codeToSend });
         console.log("Respuesta del servidor:", response.data);
         return response.data.success
             ? { success: true, output: response.data.output }

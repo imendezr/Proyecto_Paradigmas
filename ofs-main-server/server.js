@@ -1,14 +1,15 @@
 /**
- # Configuración del servidor OFS
+ # Configuración del servidor principal OFS
 
- Este documento describe la configuración de un servidor OFS y cómo maneja
- las solicitudes relacionadas con la compilación y gestión de scripts.
+ Este documento describe la configuración del servidor principal que actúa como
+ un intermediario entre el cliente y el servidor de lógica de negocios.
 
  Para empezar, primero importamos las bibliotecas necesarias:
  */
 
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
@@ -18,7 +19,7 @@ const path = require('path');
  Establecemos el puerto y la ubicación donde se guardarán los scripts.
  */
 
-const PORT = 3001;
+const PORT = 3005;
 const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 
 /**
@@ -49,20 +50,7 @@ app.use(express.json());
  Definimos las rutas que manejará el servidor.
  */
 
-app.get('/', (_, res) => res.send('Servidor OFS en funcionamiento!'));
-
-app.post('/compile', (req, res) => {
-    const {code} = req.body;
-    console.log("Código recibido para compilar:", code);
-    const timestamp = new Date().toISOString();
-    const output = `${timestamp}\n${code}`;
-    console.log("Respuesta enviada:", output);
-    res.json({
-        success: true,
-        input: code,
-        output: `${timestamp}\n${code}`
-    });
-});
+app.get('/', (_, res) => res.send('Servidor principal OFS en funcionamiento!'));
 
 /**
  El servidor también permitirá guardar y recuperar scripts por nombre.
@@ -108,16 +96,26 @@ app.get('/api/retrieve/:scriptName', (req, res) => {
     }
 });
 
+app.post('/api/compile', async (req, res) => {
+    const { code } = req.body;
+    try {
+        const response = await axios.post('http://localhost:3001/compile', { code });
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error al comunicarse con el servidor de lógica:", error);
+        res.status(500).json({ success: false, message: "Error al comunicarse con el servidor de lógica." });
+    }
+});
+
 /**
  ## Manejo de errores y puesta en marcha del servidor
 
  Finalmente, configuramos el servidor para manejar errores inesperados y lo ponemos en marcha.
  */
 
-app.use((err, req, res) => {
-    err.stack = undefined;
+app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Servidor principal corriendo en http://localhost:${PORT}`));
