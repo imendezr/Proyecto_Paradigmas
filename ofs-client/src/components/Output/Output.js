@@ -16,7 +16,7 @@ import React from 'react';
 
 const Output = ({result}) => {
     return (
-        <div>
+        <div className="TA">
             <textarea readOnly value={result} rows="10" cols="50"></textarea>
         </div>
     );

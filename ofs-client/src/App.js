@@ -10,11 +10,13 @@
  Necesitamos diversos componentes y funciones auxiliares para que nuestra aplicación funcione correctamente.
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Editor from './components/Editor/Editor';
 import Output from './components/Output/Output';
+import StatusBar from './components/StatusBar/StatusBar';
+import ConsoleArea from './components/ConsoleArea/ConsoleArea';
 import Menu from './components/Menu/Menu';
-import {sendCodeToServer} from './api/scripts';
+import {compileCodeOnServer, evaluateCodeOnServer} from './api/scripts';
 import './App.css';
 
 /**
@@ -35,9 +37,21 @@ function App() {
      */
 
     const [currentCode, setCurrentCode] = useState('');
+    const [statusBarMessage, setStatusBarMessage] = useState('');
+    const [consoleAreaMessage, setConsoleAreaMessage] = useState('');
     const [transpiled, setTranspiled] = useState('');
-    const [consoleMessage, setConsoleMessage] = useState('');
     const [preferences, setPreferences] = useState({theme: 'light'});
+
+    /**
+     ### Actualización de Tema
+
+     Este efecto se dispara cada vez que cambian las preferencias de tema del usuario.
+     Su propósito es actualizar el tema de la aplicación en función de las preferencias seleccionadas.
+     */
+
+    useEffect(() => {
+        document.body.setAttribute('data-theme', preferences.theme);
+    }, [preferences.theme]);
 
     /**
      ### Actualizar Preferencias
@@ -55,40 +69,51 @@ function App() {
      */
 
     const handleCompile = async () => {
-        console.log("Código a enviar:", currentCode);
-        const result = await sendCodeToServer(currentCode);
-        console.log("Resultado de la compilación:", result);
-        setConsoleMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
-        result.success && setTranspiled(result.output);
+        !currentCode ? setStatusBarMessage("Error: ingrese el código a compilar.") : (async () => {
+            console.log("Código a enviar:", currentCode);
+            const result = await compileCodeOnServer(currentCode);
+            console.log("Resultado de la compilación:", result);
+
+            setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
+            result.success && setTranspiled(result.output);
+        })();
+    };
+
+    /**
+     ### Evaluar Código
+
+     Cuando el usuario decide evaluar su código, esta función se invoca. Envía el código
+     actual al servidor y espera una respuesta.
+     */
+
+    const handleEvaluate = async () => {
+        !currentCode ? setStatusBarMessage("Error: ingrese el código a evaluar.") : (async () => {
+            const result = await evaluateCodeOnServer(currentCode);
+            setStatusBarMessage(result.message || 'Error al comunicarse con el servidor.');
+        })();
     };
 
     /**
      ### Renderizar
 
-     Definimos la estructura visual de nuestra aplicación. Se compone de un menú, el editor, la salida transpilada
-     y un área de consola para mensajes.
+     Definimos la estructura visual de nuestra aplicación. Se compone de un menú, el editor, la salida transpilada, una barra de estado
+     y un área de consola para evaluaciones de codigo.
      */
 
     return (
-        <div className="App" data-theme={preferences.theme}>
+        <div className="App">
             <Menu preferences={preferences} updatePreference={updatePreference}/>
             <div className="Code">
-                <div className="EA">
-                    <Editor
-                        code={currentCode}
-                        setConsoleMessage={setConsoleMessage}
-                        onCodeChange={setCurrentCode}
-                    />
-                </div>
-                <div className="TA">
-                    <Output result={transpiled}/>
-                </div>
+                <Editor
+                    code={currentCode}
+                    setStatusBarMessage={setStatusBarMessage}
+                    onCodeChange={setCurrentCode}
+                />
+                <Output result={transpiled}/>
             </div>
             <div className="Console">
-                <div className="RA">
-                    <button onClick={handleCompile}>Compilar</button>
-                    <textarea readOnly value={consoleMessage} rows="3"></textarea>
-                </div>
+                <StatusBar message={statusBarMessage}/>
+                <ConsoleArea message={consoleAreaMessage} onCompile={handleCompile} onEvaluate={handleEvaluate}/>
             </div>
         </div>
     );

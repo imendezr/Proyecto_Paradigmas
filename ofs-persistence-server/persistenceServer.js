@@ -11,6 +11,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
 
 /**
  ## Configuración básica del servidor
@@ -49,12 +50,12 @@ app.use(express.json());
  Estas funciones permiten guardar y leer scripts del disco.
  */
 
-const saveToFile = (scriptName, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), code);
+const saveToFile = (id, code) =>
+    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
 
-const readFromFile = scriptName =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8')
+const readFromFile = id =>
+    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
+        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
         : null;
 
 /**
@@ -64,28 +65,32 @@ const readFromFile = scriptName =>
  */
 
 app.post('/script/save', (req, res) => {
-    const {scriptName, code} = req.body;
+    const {id, code} = req.body;
 
     try {
-        saveToFile(scriptName, code);
-        res.json({success: true, message: `Script ${scriptName} guardado con éxito.`});
+        saveToFile(id, code);
+        res.json({success: true, message: `Script ${id} guardado con éxito.`});
     } catch (error) {
         res.status(500).json({success: false, message: "Error al guardar el script."});
     }
 });
 
-app.get('/script/:scriptName', (req, res) => {
-    const {scriptName} = req.params;
+app.get('/script/:id', (req, res) => {
+    const {id} = req.params;
 
     try {
-        const code = readFromFile(scriptName);
+        const code = readFromFile(id);
         code
             ? res.json({success: true, code})
-            : res.status(404).json({success: false, message: `Script ${scriptName} no encontrado.`});
+            : res.status(404).json({success: false, message: `Script ${id} no encontrado.`});
     } catch (error) {
         console.error("Error al leer el archivo:", error);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
+});
+
+app.get('/about', (_, res) => {
+    res.json(aboutInfo);
 });
 
 /**

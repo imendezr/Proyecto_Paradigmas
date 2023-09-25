@@ -16,26 +16,28 @@ import {retrieveScript, saveScript} from '../../api/scripts';
  ## Definición del Componente
 
  El editor recibe dos funciones del componente principal (`App`):
- - `setConsoleMessage`: Actualizar mensajes en la consola.
+ - `setStatusBarMessage`: Actualizar mensajes en la barra de estado.
  - `onCodeChange`: Notificar cambios en el código.
 
  Dentro del componente, gestionamos dos estados principales:
  - `code`: El código actual que el usuario ha escrito o recuperado.
- - `scriptName`: El nombre bajo el cual se guardará o se ha guardado un script.
+ - `id`: El nombre bajo el cual se guardará o se ha guardado un script.
  */
 
-const Editor = ({code, setConsoleMessage, onCodeChange}) => {
-    const [scriptName, setScriptName] = useState('');
+const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
+    const [id, setId] = useState('');
 
     /**
      ### Guardar Script
 
-     Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la consola.
+     Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la barra de estado.
      */
 
     const handleSaveScript = async () => {
-        const result = await saveScript(scriptName, code);
-        setConsoleMessage(result.message);
+        !id ? setStatusBarMessage("Error: ingrese un nombre para el script.") : (async () => {
+            const result = await saveScript(id, code);
+            setStatusBarMessage(result.message);
+        })();
     };
 
     /**
@@ -46,19 +48,19 @@ const Editor = ({code, setConsoleMessage, onCodeChange}) => {
      */
 
     const handleRetrieveScript = async () => {
-        const result = await retrieveScript(scriptName);
-        if (result.success) {
-            onCodeChange(result.code);
-        }
-        setConsoleMessage(result.message);
+        !id ? setStatusBarMessage("Error: ingrese un nombre de script para recuperar.") : (async () => {
+            const result = await retrieveScript(id);
+            result.success && onCodeChange(result.code);
+            setStatusBarMessage(result.message);
+        })();
     };
 
     return (
-        <div>
+        <div className="EA">
             <div>
                 <input
-                    value={scriptName}
-                    onChange={(e) => setScriptName(e.target.value)}
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
                     placeholder="Nombre del script"
                 />
                 <button onClick={handleSaveScript}>Guardar</button>

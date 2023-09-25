@@ -13,13 +13,14 @@
  Un botón para compilar el código y un área de texto para mostrar los mensajes de la consola.
  */
 
-function ConsoleArea({message, onCompile}) {
+function ConsoleArea({message, onCompile, onEvaluate}) {
     return (
-        <div className="Console">
-            <div className="RA">
+        <div className="RA">
+            <div>
                 <button onClick={onCompile}>Compilar</button>
-                <textarea readOnly value={message} rows="3"></textarea>
+                <button onClick={onEvaluate}>Evaluar</button>
             </div>
+            <textarea readOnly value={message} rows="3"></textarea>
         </div>
     );
 }

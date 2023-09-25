@@ -1,0 +1,48 @@
+{
+  "aboutInfo": [
+    {
+      "nombre": "Isaac Méndez Rodríguez",
+      "cedula": "118090020",
+      "curso": "Paradigmas de programación",
+      "horario": "1 pm",
+      "proyecto": "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
+      "semestre": "II Ciclo",
+      "annio": 2023,
+      "escuela": "Escuela de informática",
+      "universidad": "Universidad Nacional de Costa Rica (UNA)"
+    },
+    {
+      "nombre": "Fabio Villalobos Pacheco",
+      "cedula": "117560332",
+      "curso": "Paradigmas de programación",
+      "horario": "1 pm",
+      "proyecto": "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
+      "semestre": "II Ciclo",
+      "annio": 2023,
+      "escuela": "Escuela de informática",
+      "universidad": "Universidad Nacional de Costa Rica (UNA)"
+    },
+    {
+      "nombre": "Nazaret González Benavides",
+      "cedula": "116480135",
+      "curso": "Paradigmas de programación",
+      "horario": "1 pm",
+      "proyecto": "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
+      "semestre": "II Ciclo",
+      "annio": 2023,
+      "escuela": "Escuela de informática",
+      "universidad": "Universidad Nacional de Costa Rica (UNA)"
+    },
+    {
+      "nombre": "Diego Sánchez Jiménez",
+      "cedula": "402400393",
+      "curso": "Paradigmas de programación",
+      "horario": "1 pm",
+      "proyecto": "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
+      "semestre": "II Ciclo",
+      "annio": 2023,
+      "escuela": "Escuela de informática",
+      "universidad": "Universidad Nacional de Costa Rica (UNA)"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
  # Configuración del servidor de lógica OFS
 
  Este documento describe cómo el servidor de lógica de OFS maneja
- las solicitudes relacionadas con la compilación de scripts.
+ las solicitudes relacionadas con la compilación y evaluación de scripts.
 
  Para empezar, primero importamos las bibliotecas necesarias:
  */

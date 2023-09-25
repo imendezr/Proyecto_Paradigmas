@@ -27,12 +27,21 @@ import {getAboutInfo} from '../../api/scripts';
 function Menu({preferences, updatePreference}) {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const [teamDetails, setTeamDetails] = useState(null);
+    const [aboutInfo, setAboutInfo] = useState({});
 
     const handleAboutClick = async () => {
         const aboutData = await getAboutInfo();
-        setTeamDetails(aboutData);
-        setPopupOpen(true);
+
+        const handleSuccess = () => {
+            setAboutInfo(aboutData);
+            setPopupOpen(true);
+        };
+
+        const handleError = () => {
+            console.error(aboutData.message);
+        };
+
+        aboutData.success === false ? handleError() : handleSuccess();
     };
 
     const closePopup = () => {
@@ -40,7 +49,7 @@ function Menu({preferences, updatePreference}) {
     };
 
     return (
-        <div className="menuContainer">
+        <div className="Menu">
             <AboutButton onClick={handleAboutClick}/>
             <h1>Prototipo: Entorno OneFlowStream (OFS)</h1>
             <div className="prefContainer">
@@ -48,7 +57,7 @@ function Menu({preferences, updatePreference}) {
                 {isPreferencesOpen &&
                     <PreferencesDropdown preferences={preferences} updatePreference={updatePreference}/>}
             </div>
-            <AboutPopup isPopupOpen={isPopupOpen} closePopup={closePopup} teamDetails={teamDetails}/>
+            <AboutPopup isPopupOpen={isPopupOpen} closePopup={closePopup} aboutInfo={aboutInfo}/>
         </div>
     );
 }

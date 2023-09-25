@@ -56,19 +56,19 @@ app.get('/', (_, res) => res.send('Servidor principal OFS en funcionamiento!'));
  El servidor también permitirá guardar y recuperar scripts por nombre.
  */
 
-const saveToFile = (scriptName, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), code);
+const saveToFile = (id, code) =>
+    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
 
-const readFromFile = scriptName =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8')
+const readFromFile = id =>
+    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
+        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
         : null;
 
 app.post('/script/save', async (req, res) => {
-    const {scriptName, code} = req.body;
+    const {id, code} = req.body;
 
     try {
-        const response = await axios.post('http://localhost:3006/script/save', {scriptName, code});
+        const response = await axios.post('http://localhost:3006/script/save', {id, code});
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error);
@@ -76,11 +76,11 @@ app.post('/script/save', async (req, res) => {
     }
 });
 
-app.get('/script/:scriptName', async (req, res) => {
-    const {scriptName} = req.params;
+app.get('/script/:id', async (req, res) => {
+    const {id} = req.params;
 
     try {
-        const response = await axios.get(`http://localhost:3006/script/${scriptName}`);
+        const response = await axios.get(`http://localhost:3006/script/${id}`);
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error.response ? error.response.data : error.message);
@@ -88,30 +88,14 @@ app.get('/script/:scriptName', async (req, res) => {
     }
 });
 
-/** Información de los miembros del equipo en formato JSON */
-const teamDetails = {
-    teamMembers: [
-        {
-            name: "Isaac Méndez Rodríguez",
-            id: "118090020",
-            course: "Paradigmas de programación",
-            schedule: "1 pm",
-            project: "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
-            semester: "II Ciclo",
-            year: 2023,
-            school: "Escuela de informática",
-            university: "Universidad Nacional de Costa Rica (UNA)",
-        },
-        /** Añadir información de los otros miembros
-         {
-         name: "Nombre",
-         ...
-         },
-         ... */
-    ],
-};
-app.get('/about', (_, res) => {
-    res.json(teamDetails); // Retorna la información del equipo en formato JSON
+app.get('/about', async (_, res) => {
+    try {
+        const response = await axios.get('http://localhost:3006/about');
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error al comunicarse con el servidor de persistencia:", error);
+        res.status(500).json({success: false, message: "Error al obtener información acerca del equipo."});
+    }
 });
 
 app.post('/api/compile', async (req, res) => {
@@ -122,6 +106,20 @@ app.post('/api/compile', async (req, res) => {
     } catch (error) {
         console.error("Error al comunicarse con el servidor de lógica:", error);
         res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
+    }
+});
+
+app.post('/api/eval', async (req, res) => {
+    const {code} = req.body;
+    try {
+        const response = await axios.post('http://localhost:3001/eval', {code});
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error al comunicarse con el servidor de lógica para evaluación:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error al comunicarse con el servidor de lógica para evaluación."
+        });
     }
 });
 

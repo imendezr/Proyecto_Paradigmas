@@ -27,34 +27,7 @@
 body {
     background-color: var(--background-main);
     margin: 0;
-    font-family: sans-serif;
     color: var(--text-main);
-}
-
-.App {
-    background-color: var(--background-main);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 5px;
-    color: var(--text-main);
-}
-
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-.App-header {
-    background-color: var(--primary-color);
-    color: var(--text-area-bg);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
 }
 
 .Code {
@@ -70,69 +43,72 @@ body {
 
 .EA {
     justify-content: flex-start;
+    margin-right: 2px;
+}
+
+.EA input {
+    margin: 0 2px;
 }
 
 .TA {
     justify-content: flex-end;
 }
 
-.EA textarea, .TA textarea, .RA textarea {
+input, textarea {
+    background-color: var(--text-area-bg);
+    color: var(--text-main);
+}
+
+.EA textarea, .TA textarea, .RA textarea, .StatusBar textarea {
     width: 100%;
     resize: none;
     box-shadow: 0 0 10px var(--border-shadow);
-    background-color: var(--text-area-bg);
-    color: var(--text-main);
+}
+
+.RA button {
+    margin-left: 2px;
 }
 
 .RA textarea {
     height: 120px;
 }
 
-input {
-    background-color: var(--text-area-bg);
-    color: var(--text-main);
-}
-
 .Console {
     width: 100%;
-    margin-bottom: 217px;
+    margin-top: 2px;
 }
 
-.RA {
+.Menu {
     width: 100%;
-}
-
-.menuContainer {
     min-height: 80px;
-    background-color: var(--primary-color);
-    color: var(--text-area-bg);
     display: flex;
-    width: 100%;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     flex-wrap: nowrap;
+    background-color: var(--primary-color);
+    color: var(--text-area-bg);
 }
 
-.menuContainer h1 {
+.Menu h1 {
     text-align: center;
     margin: 0 10px;
-    white-space: nowrap; /* Evita que el título se rompa en líneas */
-    overflow: hidden; /* Esconde cualquier texto que exceda el ancho máximo */
-    text-overflow: ellipsis; /* Muestra puntos suspensivos si el título es demasiado largo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .AboutButton, .prefContainer {
-    flex: 0 0 auto; /* No crece, no se reduce y no tiene una base flexible. */
+    flex: 0 0 auto;
 }
 
 .popupBackground {
+    width: 100%;
+    height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -140,7 +116,6 @@ input {
 
 .popupContent {
     position: relative;
-    background-color: var(--background-container);
     padding: 20px;
     border-radius: 10px;
     width: 80%;
@@ -149,6 +124,7 @@ input {
     text-align: left;
     max-height: 80vh;
     overflow-y: auto;
+    background-color: var(--background-container);
     color: var(--text-main);
 }
 
@@ -176,39 +152,31 @@ input {
     position: absolute;
     right: 0;
     top: 100%;
-    background: var(--background-container);
     padding: 10px;
     border: 1px solid var(--border-shadow);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     box-shadow: 0 0 10px var(--border-shadow);
-    color: var(--text-main);
     border-radius: 20px;
+    background: var(--background-container);
+    color: var(--text-main);
 }
 
 button, .button {
-    background-color: var(--button-color);
-    color: var(--text-main);
     border: none;
     padding: 3px 10px;
+    margin: 2px 2px 2px 0;
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: 5px;
-    margin: 2px;
+    background-color: var(--button-color);
+    color: var(--text-main);
 }
 
-.menuContainer button, .menuContainer .button {
+.Menu button, .Menu .button {
     padding: 10px 20px;
     border-radius: 20px;
-}
-
-.menuContainer button:hover, .menuContainer .button:hover {
-    background-color: #7B9CA5;
-}
-
-button:hover, .button:hover {
-    background-color: var(--primary-color);
 }
 
 [data-theme="light"] button:hover, [data-theme="light"] .button:hover {
