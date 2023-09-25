@@ -12,5 +12,6 @@ Development:
 1. Usar 'npm install' en la carpeta de cada servidor y cliente. En caso de no tener descargado los modulos.
 2. Borrar o mover fuera del directorio del proyecto las carpetas "node_modules" del cliente y servidores antes de hacer un commit.
 3. La aplicacion se ejecuta usando 'npm start' en cada uno de los servidores y cliente.
-4. Si hace un cambio en algún servidor, debe reiniciarlo para no mostrar errores.
-5. En caso de hacer una Build ('npm run build'), borrarla o moverla fuera del directorio del proyecto antes de hacer un commit.
+4. Para detener la aplicación o servidor use CTRL + C. Y + Enter.
+5. Si hace un cambio en algún servidor, debe reiniciarlo para no mostrar errores.
+6. En caso de hacer una Build ('npm run build'), borrarla o moverla fuera del directorio del proyecto antes de hacer un commit.
