@@ -14,7 +14,7 @@ const SERVER_URL = 'http://localhost:3005';
 const postToServer = (endpoint, data) => axios.post(`${SERVER_URL}${endpoint}`, data).then(response => response.data);
 
 const saveScript = (scriptName, code) =>
-    postToServer('/api/save', {scriptName, code})
+    postToServer('/script/save', {scriptName, code})
         .then(response => ({
             success: response.success,
             message: response.success ? "Script guardado con éxito." : response.message

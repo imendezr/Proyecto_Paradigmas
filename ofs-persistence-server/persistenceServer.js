@@ -83,6 +83,7 @@ app.get('/script/:scriptName', (req, res) => {
             ? res.json({success: true, code})
             : res.status(404).json({success: false, message: `Script ${scriptName} no encontrado.`});
     } catch (error) {
+        console.error("Error al leer el archivo:", error);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
 });

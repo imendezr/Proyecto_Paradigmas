@@ -68,7 +68,7 @@ app.post('/script/save', async (req, res) => {
     const {scriptName, code} = req.body;
 
     try {
-        const response = await axios.post('http://localhost:3006/api/save', {scriptName, code});
+        const response = await axios.post('http://localhost:3006/script/save', {scriptName, code});
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error);
@@ -80,10 +80,10 @@ app.get('/script/:scriptName', async (req, res) => {
     const {scriptName} = req.params;
 
     try {
-        const response = await axios.get(`http://localhost:3006/api/retrieve/${scriptName}`);
+        const response = await axios.get(`http://localhost:3006/script/${scriptName}`);
         res.json(response.data);
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de persistencia:", error);
+        console.error("Error al comunicarse con el servidor de persistencia:", error.response ? error.response.data : error.message);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
 });
