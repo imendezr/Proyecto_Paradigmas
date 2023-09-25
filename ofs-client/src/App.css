@@ -7,6 +7,7 @@
     --background-container: #ECE8DD;
     --primary-color: #579BB1;
     --button-color: #8AC5D2;
+    --button-hover-color: #6BA8B9;
     --border-shadow: #E1D7C6;
     --text-main: #333;
     --text-area-bg: #FFF;
@@ -17,6 +18,7 @@
     --background-container: #453453;
     --primary-color: #7E63A1;
     --button-color: #9C7DBD;
+    --button-hover-color: #6B5490;
     --border-shadow: #161616;
     --text-main: #FFFFFF;
     --text-area-bg: #3A3A3A;
@@ -115,13 +117,51 @@ input {
 .menuContainer h1 {
     text-align: center;
     margin: 0 10px;
-    white-space: nowrap;  /* Evita que el título se rompa en líneas */
-    overflow: hidden;  /* Esconde cualquier texto que exceda el ancho máximo */
-    text-overflow: ellipsis;  /* Muestra puntos suspensivos si el título es demasiado largo */
+    white-space: nowrap; /* Evita que el título se rompa en líneas */
+    overflow: hidden; /* Esconde cualquier texto que exceda el ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos si el título es demasiado largo */
 }
 
 .AboutButton, .prefContainer {
     flex: 0 0 auto; /* No crece, no se reduce y no tiene una base flexible. */
+}
+
+.popupBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupContent {
+    position: relative;
+    background-color: var(--background-container);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 0 20px var(--border-shadow);
+    text-align: left;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: var(--text-main);
+}
+
+.popupContent h3, .popupContent h4 {
+    border-bottom: 1px solid var(--text-main);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.popupContent button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .prefContainer {
@@ -169,6 +209,14 @@ button, .button {
 
 button:hover, .button:hover {
     background-color: var(--primary-color);
+}
+
+[data-theme="light"] button:hover, [data-theme="light"] .button:hover {
+    background-color: var(--button-hover-color);
+}
+
+[data-theme="dark"] button:hover, [data-theme="dark"] .button:hover {
+    background-color: var(--button-hover-color);
 }
 
 @keyframes App-logo-spin {

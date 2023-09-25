@@ -10,11 +10,11 @@
  Necesitamos diversos componentes y funciones auxiliares para que nuestra aplicación funcione correctamente.
  */
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Editor from './components/Editor/Editor';
 import Output from './components/Output/Output';
 import Menu from './components/Menu/Menu';
-import { sendCodeToServer } from './api/scripts';
+import {sendCodeToServer} from './api/scripts';
 import './App.css';
 
 /**
@@ -37,7 +37,7 @@ function App() {
     const [currentCode, setCurrentCode] = useState('');
     const [transpiled, setTranspiled] = useState('');
     const [consoleMessage, setConsoleMessage] = useState('');
-    const [preferences, setPreferences] = useState({ theme: 'light' });
+    const [preferences, setPreferences] = useState({theme: 'light'});
 
     /**
      ### Actualizar Preferencias
@@ -45,7 +45,7 @@ function App() {
      Esta función toma una clave y un valor para actualizar las preferencias del usuario.
      */
 
-    const updatePreference = (key, value) => setPreferences(prevPreferences => ({ ...prevPreferences, [key]: value }));
+    const updatePreference = (key, value) => setPreferences(prevPreferences => ({...prevPreferences, [key]: value}));
 
     /**
      ### Compilar Código
@@ -71,7 +71,7 @@ function App() {
 
     return (
         <div className="App" data-theme={preferences.theme}>
-            <Menu preferences={preferences} updatePreference={updatePreference} />
+            <Menu preferences={preferences} updatePreference={updatePreference}/>
             <div className="Code">
                 <div className="EA">
                     <Editor
@@ -81,7 +81,7 @@ function App() {
                     />
                 </div>
                 <div className="TA">
-                    <Output result={transpiled} />
+                    <Output result={transpiled}/>
                 </div>
             </div>
             <div className="Console">

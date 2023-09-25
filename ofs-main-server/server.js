@@ -64,7 +64,7 @@ const readFromFile = scriptName =>
         ? fs.readFileSync(path.join(SCRIPTS_DIR, `${scriptName}.txt`), 'utf8')
         : null;
 
-app.post('/api/save', async (req, res) => {
+app.post('/script/save', async (req, res) => {
     const {scriptName, code} = req.body;
 
     try {
@@ -76,7 +76,7 @@ app.post('/api/save', async (req, res) => {
     }
 });
 
-app.get('/api/retrieve/:scriptName', async (req, res) => {
+app.get('/script/:scriptName', async (req, res) => {
     const {scriptName} = req.params;
 
     try {
@@ -88,14 +88,40 @@ app.get('/api/retrieve/:scriptName', async (req, res) => {
     }
 });
 
+/** Información de los miembros del equipo en formato JSON */
+const teamDetails = {
+    teamMembers: [
+        {
+            name: "Isaac Méndez Rodríguez",
+            id: "118090020",
+            course: "Paradigmas de programación",
+            schedule: "1 pm",
+            project: "Entorno Prototipo para el Lenguaje OneFlowStream (OFS)",
+            semester: "II Ciclo",
+            year: 2023,
+            school: "Escuela de informática",
+            university: "Universidad Nacional de Costa Rica (UNA)",
+        },
+        /** Añadir información de los otros miembros
+         {
+         name: "Nombre",
+         ...
+         },
+         ... */
+    ],
+};
+app.get('/about', (_, res) => {
+    res.json(teamDetails); // Retorna la información del equipo en formato JSON
+});
+
 app.post('/api/compile', async (req, res) => {
-    const { code } = req.body;
+    const {code} = req.body;
     try {
-        const response = await axios.post('http://localhost:3001/compile', { code });
+        const response = await axios.post('http://localhost:3001/compile', {code});
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de lógica:", error);
-        res.status(500).json({ success: false, message: "Error al comunicarse con el servidor de lógica." });
+        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
     }
 });
 

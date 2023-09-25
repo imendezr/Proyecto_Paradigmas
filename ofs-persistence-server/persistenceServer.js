@@ -63,7 +63,7 @@ const readFromFile = scriptName =>
  Definimos las rutas que manejarán las operaciones de persistencia.
  */
 
-app.post('/api/save', (req, res) => {
+app.post('/script/save', (req, res) => {
     const {scriptName, code} = req.body;
 
     try {
@@ -74,7 +74,7 @@ app.post('/api/save', (req, res) => {
     }
 });
 
-app.get('/api/retrieve/:scriptName', (req, res) => {
+app.get('/script/:scriptName', (req, res) => {
     const {scriptName} = req.params;
 
     try {

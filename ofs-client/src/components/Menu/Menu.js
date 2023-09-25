@@ -21,12 +21,22 @@ import React, {useState} from 'react';
 import AboutButton from './AboutButton';
 import PreferencesButton from './PreferencesButton';
 import PreferencesDropdown from './PreferencesDropdown';
+import AboutPopup from "./AboutPopup";
+import {getAboutInfo} from '../../api/scripts';
 
 function Menu({preferences, updatePreference}) {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
+    const [isPopupOpen, setPopupOpen] = useState(false);
+    const [teamDetails, setTeamDetails] = useState(null);
 
-    const handleAboutClick = () => {
-        // Implementar funcionalidad para "Acerca de"
+    const handleAboutClick = async () => {
+        const aboutData = await getAboutInfo();
+        setTeamDetails(aboutData);
+        setPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setPopupOpen(false);
     };
 
     return (
@@ -38,6 +48,7 @@ function Menu({preferences, updatePreference}) {
                 {isPreferencesOpen &&
                     <PreferencesDropdown preferences={preferences} updatePreference={updatePreference}/>}
             </div>
+            <AboutPopup isPopupOpen={isPopupOpen} closePopup={closePopup} teamDetails={teamDetails}/>
         </div>
     );
 }

@@ -25,7 +25,7 @@ const saveScript = (scriptName, code) =>
         });
 
 const retrieveScript = scriptName =>
-    axios.get(`${SERVER_URL}/api/retrieve/${scriptName}`)
+    axios.get(`${SERVER_URL}/script/${scriptName}`)
         .then(response => ({
             success: response.data.success,
             code: response.data.code,
@@ -48,4 +48,12 @@ const sendCodeToServer = codeToSend =>
             return {success: false, message: "Error al comunicarse con el servidor."};
         });
 
-export {saveScript, retrieveScript, sendCodeToServer};
+const getAboutInfo = () =>
+    axios.get(`${SERVER_URL}/about`)
+        .then(response => response.data)
+        .catch(error => {
+            console.error("Error al obtener información 'Acerca de':", error);
+            return {success: false, message: "Error al obtener información."};
+        });
+
+export {saveScript, retrieveScript, sendCodeToServer, getAboutInfo};
