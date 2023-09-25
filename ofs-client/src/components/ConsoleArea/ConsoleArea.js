@@ -17,8 +17,8 @@ function ConsoleArea({message, onCompile, onEvaluate}) {
     return (
         <div className="RA">
             <div>
-                <button onClick={onCompile}>Compilar</button>
-                <button onClick={onEvaluate}>Evaluar</button>
+                <button onClick={onCompile}><i className="fa fa-play"></i></button>
+                <button onClick={onEvaluate}><i className="fa fa-check"></i></button>
             </div>
             <textarea readOnly value={message} rows="3"></textarea>
         </div>

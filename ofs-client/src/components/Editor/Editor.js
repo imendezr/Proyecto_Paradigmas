@@ -63,8 +63,8 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
                     onChange={(e) => setId(e.target.value)}
                     placeholder="Nombre del script"
                 />
-                <button onClick={handleSaveScript}>Guardar</button>
-                <button onClick={handleRetrieveScript}>Recuperar</button>
+                <button onClick={handleSaveScript}><i className="fa fa-save"></i></button>
+                <button onClick={handleRetrieveScript}><i className="fa fa-folder-open"></i></button>
             </div>
             <textarea
                 value={code}
