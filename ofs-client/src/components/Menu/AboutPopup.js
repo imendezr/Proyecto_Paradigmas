@@ -1,16 +1,12 @@
 import React from 'react';
 
-function AboutPopup({isPopupOpen, closePopup, aboutInfo}) {
-    if (!isPopupOpen) {
-        return null;
-    }
-
-    return (
+const AboutPopup = ({isPopupOpen, closePopup, aboutInfo}) =>
+    isPopupOpen && (
         <div className="popupBackground">
             <div className="popupContent">
                 <button className="closeButton" onClick={closePopup}>Cerrar</button>
                 <h4>Integrantes del equipo:</h4>
-                {aboutInfo && aboutInfo.aboutInfo && aboutInfo.aboutInfo.map(member => (
+                {aboutInfo?.aboutInfo?.map(member => (
                     <div key={member.cedula} className="memberDetails">
                         <p><strong>Nombre:</strong> {member.nombre}</p>
                         <p><strong>Cédula:</strong> {member.cedula}</p>
@@ -27,6 +23,5 @@ function AboutPopup({isPopupOpen, closePopup, aboutInfo}) {
             </div>
         </div>
     );
-}
 
 export default AboutPopup;

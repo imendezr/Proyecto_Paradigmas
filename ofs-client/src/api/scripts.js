@@ -11,7 +11,8 @@ const SERVER_URL = 'http://localhost:3005';
 /**
  * Envía el script al servidor y devuelve la respuesta.
  */
-const postToServer = (endpoint, data) => axios.post(`${SERVER_URL}${endpoint}`, data).then(response => response.data);
+const postToServer = (endpoint, data) =>
+    axios.post(`${SERVER_URL}${endpoint}`, data).then(response => response.data);
 
 const saveScript = (id, code) =>
     postToServer('/script/save', {id, code})
