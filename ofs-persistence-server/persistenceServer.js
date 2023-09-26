@@ -12,7 +12,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
-
+//const suggestedWords = ['manzana', 'banana', 'cereza', 'dátil', 'kiwi', 'limón'];
 /**
  ## Configuración básica del servidor
 
@@ -51,11 +51,11 @@ app.use(express.json());
  */
 
 const saveToFile = (id, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
+    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.js`), code);
 
 const readFromFile = id =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
+    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.js`))
+        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.js`), 'utf8')
         : null;
 
 /**
@@ -88,6 +88,35 @@ app.get('/script/:id', (req, res) => {
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
 });
+
+app.get('/getTxt', async (req, res) => {
+    try {
+
+        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/rafake.txt`, 'utf-8');
+        res.json({ success:true, content:txtContent });
+        console.log(txtContent);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+    }
+});
+
+
+/*app.post('/suggestions', (req, res) => {
+    const { input } = req.query;
+
+    if (!input) {
+        res.status(400).json({ error: 'Se requiere un parámetro "input".' });
+        return;
+    }
+
+    // Filtrar palabras sugeridas que coincidan con la entrada del usuario
+    const matchingSuggestions = suggestedWords.filter(word =>
+        word.toLowerCase().includes(input.toLowerCase())
+    );
+
+    res.json({ suggestions: matchingSuggestions });
+});*/
 
 app.get('/about', (_, res) => {
     res.json(aboutInfo);

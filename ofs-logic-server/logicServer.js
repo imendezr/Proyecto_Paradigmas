@@ -55,6 +55,15 @@ app.post('/compile', (req, res) => {
     });
 });
 
+app.post('/eval', (req, res) => {
+    const {code} = req.body;
+    res.json({
+        success: true,
+        input: code,
+        output: code
+    });
+});
+
 /**
  ## Manejo de errores y puesta en marcha del servidor
 

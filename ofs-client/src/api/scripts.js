@@ -37,6 +37,26 @@ const retrieveScript = id =>
             return {success: false, message: "Error al recuperar el script."};
         });
 
+const retrievetxt = () =>
+    axios.get(`http://localhost:3005/getTxt`)
+        .then(response => ({
+            success: response.data.success,
+            content: response.data.content,
+            message: response.data.success ? "Script recuperado con éxito." : response.data.message,
+        }))
+        .catch(error => {
+            console.error("Error al recuperar el script:", error);
+            return {success: false, message: "Error al recuperar el script."};
+        });
+/*const fetchSuggestions = input =>
+    postToServer('/suggestions', {input})
+        .then(response => ({
+            suggestions: response.data.suggestions
+        }))
+        .catch(error => {
+            console.error("Error al enviar el código al servidor:", error);
+            return {success: false, message: "Error al comunicarse con el servidor."};
+        });*/
 const compileCodeOnServer = codeToSend =>
     postToServer('/api/compile', {code: codeToSend})
         .then(response => ({
@@ -69,4 +89,4 @@ const getAboutInfo = () =>
             return {success: false, message: "Error al obtener información."};
         });
 
-export {saveScript, retrieveScript, compileCodeOnServer, getAboutInfo, evaluateCodeOnServer};
+export {saveScript, retrieveScript, compileCodeOnServer, getAboutInfo, evaluateCodeOnServer, retrievetxt};
