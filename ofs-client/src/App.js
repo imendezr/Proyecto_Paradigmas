@@ -42,6 +42,8 @@ function App() {
     const [consoleAreaMessage, setConsoleAreaMessage] = useState('');
     const [transpiled, setTranspiled] = useState('');
     const [preferences, setPreferences] = useState({theme: 'light'});
+    const [id,setid] = useState('');
+    const [filename,setFilename] = useState('');
 
     /**
      ### Actualización de Tema
@@ -70,11 +72,11 @@ function App() {
      */
 
     const handleCompile = async () => {
-        !currentCode ? setStatusBarMessage("Error: ingrese el código a compilar.") : (async () => {
+        !currentCode || !id ? setStatusBarMessage("Error: ingrese el código a compilar.") : (async () => {
             console.log("Código a enviar:", currentCode);
             const result = await compileCodeOnServer(currentCode);
             console.log("Resultado de la compilación:", result);
-
+            setFilename(id + ".js");
             setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
             result.success && setTranspiled(result.output);
         })();
@@ -111,9 +113,10 @@ function App() {
                     code={currentCode}
                     setStatusBarMessage={setStatusBarMessage}
                     onCodeChange={setCurrentCode}
+                    idchange={setid}
                 />
 
-                <Output result={transpiled}/>
+                <Output result={transpiled} filename={filename}/>
             </div>
             <div className="Console">
                 <StatusBar message={statusBarMessage}/>

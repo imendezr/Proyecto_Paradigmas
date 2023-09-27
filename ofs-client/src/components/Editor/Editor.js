@@ -10,7 +10,7 @@
  */
 
 
-import {compileCodeOnServer, keywords, retrieveScript, saveScript} from '../../api/scripts';
+import { keywords, retrieveScript, saveScript} from '../../api/scripts';
 import React, {useEffect, useState, useRef} from 'react';
 
 /**
@@ -25,11 +25,12 @@ import React, {useEffect, useState, useRef} from 'react';
  - `id`: El nombre bajo el cual se guardará o se ha guardado un script.
  */
 
-const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
+const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
     const [id, setId] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const textareaRef = useRef(null);
     const lineNumbersRef = useRef(null);
+    const [fileName, setFileName] = useState('');
     /**
      ### Guardar Script
 
@@ -60,6 +61,7 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
     const handleSaveScript = async () => {
         !id ? setStatusBarMessage("Error: ingrese un nombre para el script.") : (async () => {
             const result = await saveScript(id, code);
+            setFileName(id + ".txt");
             setStatusBarMessage(result.message);
         })();
     };
@@ -75,6 +77,7 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
         !id ? setStatusBarMessage("Error: ingrese un nombre de script para recuperar.") : (async () => {
             const result = await retrieveScript(id);
             result.success && onCodeChange(result.code);
+            setFileName(id + ".txt");
             setStatusBarMessage(result.message);
         })();
     };
@@ -120,12 +123,17 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
             <div>
                 <input
                     value={id}
-                    onChange={(e) => setId(e.target.value)}
+                    onChange={(e) => {setId(e.target.value); idchange(e.target.value)}}
                     placeholder="Nombre del script"
                 />
                 <button onClick={handleSaveScript}><i className="fa fa-save"></i></button>
                 <button onClick={handleRetrieveScript}><i className="fa fa-folder-open"></i></button>
             </div>
+            <input className="fieldName"
+                value={fileName}
+                placeholder=""
+                readOnly
+            />
             <div className="editor-container">
                 <div ref={lineNumbersRef} className="line-numbers">
                     {getLineNumbers()}

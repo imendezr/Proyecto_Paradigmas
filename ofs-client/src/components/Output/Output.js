@@ -15,7 +15,7 @@
 import React, { useEffect, useRef } from 'react';
 
 
-const Output = ({ result }) => {
+const Output = ({ result , filename} ) => {
     const textareaRef = useRef(null);
     const lineNumbersRef = useRef(null);
 
@@ -57,6 +57,13 @@ const Output = ({ result }) => {
 
     return (
         <div className="TA">
+            <div>
+                <input className="fieldNamejs"
+                       value={filename}
+                       placeholder=""
+                       readOnly // Make this input read-only to display the file name
+                />
+            </div>
             <div className="line-numbersTA" ref={lineNumbersRef}>
                 {getLineNumbers()}
             </div>
