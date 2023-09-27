@@ -59,11 +59,19 @@ input, textarea {
     color: var(--text-main);
 }
 
-.EA textarea, .RA textarea, .StatusBar textarea {
+.RA textarea, .StatusBar textarea {
     width: 100%;
     resize: none;
     box-shadow: 0 0 10px var(--border-shadow);
 }
+
+.EA textarea{
+    width: 100%;
+    resize: none;
+    padding-left: 20px;
+    box-shadow: 0 0 1px var(--border-shadow);
+}
+
 .TA textarea{
     top: 105.5px;
     width: 100%;
@@ -217,4 +225,25 @@ button, .button {
 .suggestions-container li {
     margin-right: 10px; /* Agrega un margen entre los elementos de lista */
     cursor: pointer; /* Cambia el cursor al pasar sobre los elementos de lista */
+}
+
+.editor-container {
+    position: relative;
+}
+
+.line-numbers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20px; /* Ancho del área de los números de línea */
+    padding: 4px 2px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+}
+
+.line-number {
+    display: block;
+    font-size: 11px;
 }
