@@ -48,15 +48,6 @@ const retrievetxt = () =>
             console.error("Error al recuperar el script:", error);
             return {success: false, message: "Error al recuperar el script."};
         });
-/*const fetchSuggestions = input =>
-    postToServer('/suggestions', {input})
-        .then(response => ({
-            suggestions: response.data.suggestions
-        }))
-        .catch(error => {
-            console.error("Error al enviar el código al servidor:", error);
-            return {success: false, message: "Error al comunicarse con el servidor."};
-        });*/
 const compileCodeOnServer = codeToSend =>
     postToServer('/api/compile', {code: codeToSend})
         .then(response => ({

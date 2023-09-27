@@ -46,16 +46,24 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
         return filteredSuggestions;
     };
     const handleSuggestions = (inputText) => {
-        // Aquí puedes implementar la lógica para obtener sugerencias basadas en inputText.
-        // Por ejemplo, puedes buscar coincidencias en una lista de palabras predefinidas.
-        // Luego, actualiza el estado de las sugerencias.
-        const suggestionsList = getSuggestionsBasedOnInput(inputText); // Implementa esta función.
+        if (inputText.trim() === '') {
+            setSuggestions([]); // Limpiar la lista de sugerencias si no hay texto
+            return;
+        }
+        const words = inputText.split(/\s+/); // Divide el texto en palabras usando espacios en blanco como delimitador
+        const lastWord = words[words.length - 1]; // Obtiene la última palabra escrita
+        // Filtra las palabras predefinidas que comienzan con la última palabra escrita (ignorando mayúsculas/minúsculas).
+        const suggestionsList = predefinedWords.filter((word) => {
+            return word.toLowerCase().startsWith(lastWord.toLowerCase());
+        });
+
         setSuggestions(suggestionsList);
     };
     const handleSuggestionClick = (suggestion) => {
-        // Manejar la selección de sugerencias y actualizar el texto en el área de edición.
-        onCodeChange(suggestion);
-        setSuggestions([]); // Limpiar la lista de sugerencias
+        const currentContent = code;
+        const updatedContent = currentContent ? currentContent + suggestion : suggestion;
+        onCodeChange(updatedContent);
+        setSuggestions([]);
     };
     const handleSaveScript = async () => {
         !id ? setStatusBarMessage("Error: ingrese un nombre para el script.") : (async () => {
@@ -99,13 +107,15 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
                 rows="10"
                 cols="50"
             ></textarea>
-            <ul>
-                {suggestions.map((suggestion, index) => (
-                    <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                        {suggestion}
-                    </li>
-                ))}
-            </ul>
+            <div className="suggestions-container">
+                <ul>
+                    {suggestions.map((suggestion, index) => (
+                        <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                            {suggestion}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

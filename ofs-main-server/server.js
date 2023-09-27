@@ -140,22 +140,7 @@ app.post('/api/eval', async (req, res) => {
  Finalmente, configuramos el servidor para manejar errores inesperados y lo ponemos en marcha.
  */
 
-/*app.post('/suggestions', async (req, res) => {
-    const { input } = req.query;
-    try {
-        const response = await axios.post('http://localhost:3006/suggestions', {input});
-        res.json(response.data);
-    } catch (error) {
-        console.error("Error al comunicarse con el servidor.", error);
-        res.status(500).json({
-            success: false,
-            message: "Error al comunicarse con el servidor."
-        });
-    }
 
-
-    res.json({ suggestions: matchingSuggestions });
-});*/
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');

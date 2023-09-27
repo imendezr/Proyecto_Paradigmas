@@ -101,23 +101,6 @@ app.get('/getTxt', async (req, res) => {
     }
 });
 
-
-/*app.post('/suggestions', (req, res) => {
-    const { input } = req.query;
-
-    if (!input) {
-        res.status(400).json({ error: 'Se requiere un parámetro "input".' });
-        return;
-    }
-
-    // Filtrar palabras sugeridas que coincidan con la entrada del usuario
-    const matchingSuggestions = suggestedWords.filter(word =>
-        word.toLowerCase().includes(input.toLowerCase())
-    );
-
-    res.json({ suggestions: matchingSuggestions });
-});*/
-
 app.get('/about', (_, res) => {
     res.json(aboutInfo);
 });

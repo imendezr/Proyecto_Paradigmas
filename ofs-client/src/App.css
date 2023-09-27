@@ -59,10 +59,17 @@ input, textarea {
     color: var(--text-main);
 }
 
-.EA textarea, .TA textarea, .RA textarea, .StatusBar textarea {
+.EA textarea, .RA textarea, .StatusBar textarea {
     width: 100%;
     resize: none;
     box-shadow: 0 0 10px var(--border-shadow);
+}
+.TA textarea{
+    top: 105.5px;
+    width: 100%;
+    resize: none;
+    box-shadow: 0 0 10px var(--border-shadow);
+    position: absolute;
 }
 
 .RA button {
@@ -200,4 +207,14 @@ button, .button {
     .App-logo {
         animation: App-logo-spin infinite 20s linear;
     }
+}
+.suggestions-container ul {
+    list-style-type: none; /* Quita los marcadores de lista */
+    padding: 0; /* Quita el espacio interior */
+    display: flex; /* Hace que los elementos de lista se muestren en línea */
+}
+
+.suggestions-container li {
+    margin-right: 10px; /* Agrega un margen entre los elementos de lista */
+    cursor: pointer; /* Cambia el cursor al pasar sobre los elementos de lista */
 }

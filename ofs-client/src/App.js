@@ -42,7 +42,6 @@ function App() {
     const [consoleAreaMessage, setConsoleAreaMessage] = useState('');
     const [transpiled, setTranspiled] = useState('');
     const [preferences, setPreferences] = useState({theme: 'light'});
-    //const [suggestions, setSuggestions] = useState([]);
 
     /**
      ### Actualización de Tema
@@ -60,16 +59,7 @@ function App() {
 
      Esta función toma una clave y un valor para actualizar las preferencias del usuario.
      */
-    /*useEffect(() => {
-        // Realizar una solicitud al servidor Express para obtener sugerencias
-        // basadas en el valor de inputText y actualizar el estado de sugerencias.
-        if (currentCode) {
-            const result =  fetchSuggestions(currentCode);
-            setSuggestions(result.suggestions);
-        } else {
-            setSuggestions([]); // Limpiar la lista de sugerencias si no hay entrada.
-        }
-    }, [currentCode]);*/
+
     const updatePreference = (key, value) => setPreferences(prevPreferences => ({...prevPreferences, [key]: value}));
 
     /**
@@ -106,11 +96,6 @@ function App() {
         })();
     };
 
-  /*  const handleSuggestionClick = (suggestion) => {
-        // Manejar la selección de sugerencias y actualizar el texto en el área de edición.
-        setCurrentCode(suggestion);
-        setSuggestions([]); // Limpiar la lista de sugerencias
-    };*/
     /**
      ### Renderizar
 
@@ -127,13 +112,7 @@ function App() {
                     setStatusBarMessage={setStatusBarMessage}
                     onCodeChange={setCurrentCode}
                 />
-                {/*<ul>
-                    {suggestions?.map((suggestion, index) => (
-                        <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                            {suggestion}
-                        </li>
-                    ))}
-                </ul>*/}
+
                 <Output result={transpiled}/>
             </div>
             <div className="Console">
