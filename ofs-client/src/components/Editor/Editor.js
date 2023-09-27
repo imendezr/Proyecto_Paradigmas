@@ -91,18 +91,21 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
 
     const handleScroll = () => {
         const textarea = textareaRef.current;
-        lineNumbersRef.current.scrollTop = textarea.scrollTop;
+        const lineNumbers = lineNumbersRef.current;
+        lineNumbers.scrollTop = textarea.scrollTop;
     };
-    useEffect(() => {
-        const textarea = textareaRef.current;
-        textarea.addEventListener('scroll', handleScroll);
-        return () => {
-            textarea.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+
+    const getLineNumbers = () => {
+        const lines = code.split('\n');
+        const totalLines = lines.length;
+        const lineNumbers = [];
+        for (let i = 1; i <= totalLines; i++) {
+            lineNumbers.push(<div key={i} className="line-number">{i}</div>);
+        }
+        return lineNumbers;
+    };
 
     useEffect(() => {
-        // Recalculate line numbers height whenever the content changes
         const textarea = textareaRef.current;
         const lineNumbers = lineNumbersRef.current;
 
@@ -114,19 +117,13 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
         updateLineNumbersHeight();
 
         textarea.addEventListener('input', updateLineNumbersHeight);
+        textarea.addEventListener('scroll', handleScroll);
+
         return () => {
             textarea.removeEventListener('input', updateLineNumbersHeight);
+            textarea.removeEventListener('scroll', handleScroll);
         };
     }, [code]);
-    const getLineNumbers = () => {
-        const lines = code.split('\n');
-        const totalLines = lines.length;
-        const lineNumbers = [];
-        for (let i = 1; i <= totalLines; i++) {
-            lineNumbers.push(<div key={i} className="line-number">{i}</div>);
-        }
-        return lineNumbers;
-    };
 
     return (
         <div className="EA">
@@ -148,6 +145,7 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
                     value={code}
                     onChange={(e) => {
                         onCodeChange(e.target.value);
+                        handleSuggestions(e.target.value);
                     }}
                     onScroll={handleScroll}
                     rows="10"

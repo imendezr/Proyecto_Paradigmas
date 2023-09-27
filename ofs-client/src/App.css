@@ -236,11 +236,12 @@ button, .button {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 20px; /* Ancho del área de los números de línea */
+    width: 20px;
     padding: 4px 2px;
     text-align: center;
     background-color: #f0f0f0;
     border-right: 1px solid #ccc;
+    overflow-y: hidden;
 }
 
 .line-number {
