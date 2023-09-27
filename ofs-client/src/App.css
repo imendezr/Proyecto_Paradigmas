@@ -76,7 +76,8 @@ input, textarea {
     top: 105.5px;
     width: 100%;
     resize: none;
-    box-shadow: 0 0 10px var(--border-shadow);
+    padding-left: 20px;
+    box-shadow: 0 0 1px var(--border-shadow);
     position: absolute;
 }
 
@@ -236,7 +237,21 @@ button, .button {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 20px;
+    width: 20px; /* Ancho del área de los números de línea */
+    padding: 4px 2px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+    overflow-y: hidden;
+}
+
+.line-numbersTA {
+    position: absolute;
+    z-index: 1198;
+    top: 17.5%;
+    left: 50%;
+    bottom: 0;
+    width: 20px; /* Ancho del área de los números de línea */
     padding: 4px 2px;
     text-align: center;
     background-color: #f0f0f0;
@@ -248,3 +263,4 @@ button, .button {
     display: block;
     font-size: 11px;
 }
+
