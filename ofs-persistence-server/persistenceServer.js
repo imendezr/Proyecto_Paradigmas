@@ -52,11 +52,11 @@ app.use(express.json());
  */
 
 const saveToFile = (id, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.js`), code);
+    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
 
 const readFromFile = id =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.js`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.js`), 'utf8')
+    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
+        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
         : null;
 
 /**
@@ -93,7 +93,7 @@ app.get('/script/:id', (req, res) => {
 app.get('/getTxt', async (req, res) => {
     try {
 
-        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/rafake.txt`, 'utf-8');
+        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ra_fake.txt`, 'utf-8');
         res.json({ success:true, content:txtContent });
         console.log(txtContent);
     } catch (error) {
