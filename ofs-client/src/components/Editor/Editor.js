@@ -11,6 +11,8 @@
 
 import React, {useState} from 'react';
 import {compileCodeOnServer, keywords, retrieveScript, saveScript} from '../../api/scripts';
+import React, {useEffect, useState, useRef} from 'react';
+import {retrieveScript, saveScript} from '../../api/scripts';
 
 /**
  ## Definición del Componente
@@ -27,6 +29,8 @@ import {compileCodeOnServer, keywords, retrieveScript, saveScript} from '../../a
 const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
     const [id, setId] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const textareaRef = useRef(null);
+    const lineNumbersRef = useRef(null);
     /**
      ### Guardar Script
 
@@ -76,6 +80,42 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
         })();
     };
 
+    const handleScroll = () => {
+        const textarea = textareaRef.current;
+        const lineNumbers = lineNumbersRef.current;
+        lineNumbers.scrollTop = textarea.scrollTop;
+    };
+
+    const getLineNumbers = () => {
+        const lines = code.split('\n');
+        const totalLines = lines.length;
+        const lineNumbers = [];
+        for (let i = 1; i <= totalLines; i++) {
+            lineNumbers.push(<div key={i} className="line-number">{i}</div>);
+        }
+        return lineNumbers;
+    };
+
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        const lineNumbers = lineNumbersRef.current;
+
+        const updateLineNumbersHeight = () => {
+            const textareaComputedStyle = getComputedStyle(textarea);
+            lineNumbers.style.height = textareaComputedStyle.height;
+        };
+
+        updateLineNumbersHeight();
+
+        textarea.addEventListener('input', updateLineNumbersHeight);
+        textarea.addEventListener('scroll', handleScroll);
+
+        return () => {
+            textarea.removeEventListener('input', updateLineNumbersHeight);
+            textarea.removeEventListener('scroll', handleScroll);
+        };
+    }, [code]);
+
     return (
         <div className="EA">
             <div>
@@ -87,15 +127,22 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
                 <button onClick={handleSaveScript}><i className="fa fa-save"></i></button>
                 <button onClick={handleRetrieveScript}><i className="fa fa-folder-open"></i></button>
             </div>
-            <textarea
-                value={code}
-                onChange={(e) => {
-                    onCodeChange(e.target.value);
-                    handleSuggestions(e.target.value);
-                }}
-                rows="10"
-                cols="50"
-            ></textarea>
+            <div className="editor-container">
+                <div ref={lineNumbersRef} className="line-numbers">
+                    {getLineNumbers()}
+                </div>
+                <textarea
+                    ref={textareaRef}
+                    value={code}
+                    onChange={(e) => {
+                        onCodeChange(e.target.value);
+                        handleSuggestions(e.target.value);
+                    }}
+                    onScroll={handleScroll}
+                    rows="10"
+                    cols="50"
+                ></textarea>
+            </div>
             <div className="suggestions-container">
                 <ul>
                     {suggestions.map((suggestion, index) => (
