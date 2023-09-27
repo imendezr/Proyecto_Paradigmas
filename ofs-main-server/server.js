@@ -99,6 +99,15 @@ app.get('/getTxt', async (req, res) => {
     }
 });
 
+app.get('/keywords', async (req, res) => {
+
+    try {
+        const response = await axios.get(`http://localhost:3006/keywords`);
+        res.json(response.data);
+    } catch (error) {
+    }
+});
+
 app.get('/about', async (_, res) => {
     try {
         const response = await axios.get('http://localhost:3006/about');

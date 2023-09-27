@@ -48,6 +48,11 @@ const retrievetxt = () =>
             console.error("Error al recuperar el script:", error);
             return {success: false, message: "Error al recuperar el script."};
         });
+
+const keywords = () =>
+    axios.get(`http://localhost:3005/keywords`)
+
+
 const compileCodeOnServer = codeToSend =>
     postToServer('/api/compile', {code: codeToSend})
         .then(response => ({
@@ -80,4 +85,4 @@ const getAboutInfo = () =>
             return {success: false, message: "Error al obtener información."};
         });
 
-export {saveScript, retrieveScript, compileCodeOnServer, getAboutInfo, evaluateCodeOnServer, retrievetxt};
+export {saveScript, retrieveScript, compileCodeOnServer, getAboutInfo, evaluateCodeOnServer, retrievetxt, keywords};

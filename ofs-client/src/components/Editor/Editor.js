@@ -10,7 +10,7 @@
  */
 
 import React, {useState} from 'react';
-import {retrieveScript, saveScript} from '../../api/scripts';
+import {compileCodeOnServer, keywords, retrieveScript, saveScript} from '../../api/scripts';
 
 /**
  ## Definición del Componente
@@ -32,28 +32,17 @@ const Editor = ({code, setStatusBarMessage, onCodeChange}) => {
 
      Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la barra de estado.
      */
-    const predefinedWords = ["if", "else", "for", "while", "function", "const", "let", "var", "return"];
 
-// Implementa la función para obtener sugerencias basadas en el texto de entrada.
-    const getSuggestionsBasedOnInput = (inputText) => {
-        inputText = inputText.toLowerCase(); // Convierte el texto de entrada a minúsculas para hacer coincidencias sin distinción entre mayúsculas y minúsculas.
-
-        // Filtra las palabras predefinidas que comienzan con el texto de entrada.
-        const filteredSuggestions = predefinedWords.filter((word) => {
-            return word.toLowerCase().startsWith(inputText);
-        });
-
-        return filteredSuggestions;
-    };
-    const handleSuggestions = (inputText) => {
+    const handleSuggestions  = async (inputText) => {
         if (inputText.trim() === '') {
-            setSuggestions([]); // Limpiar la lista de sugerencias si no hay texto
+            setSuggestions([]);
             return;
         }
-        const words = inputText.split(/\s+/); // Divide el texto en palabras usando espacios en blanco como delimitador
-        const lastWord = words[words.length - 1]; // Obtiene la última palabra escrita
-        // Filtra las palabras predefinidas que comienzan con la última palabra escrita (ignorando mayúsculas/minúsculas).
-        const suggestionsList = predefinedWords.filter((word) => {
+        const result =  await keywords();
+        setSuggestions(result.data);
+        const words = inputText.split(/\s+/);
+        const lastWord = words[words.length - 1];
+        const suggestionsList = result.data.filter((word) => {
             return word.toLowerCase().startsWith(lastWord.toLowerCase());
         });
 

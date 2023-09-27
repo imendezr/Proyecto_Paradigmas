@@ -16,7 +16,7 @@ import Output from './components/Output/Output';
 import StatusBar from './components/StatusBar/StatusBar';
 import ConsoleArea from './components/ConsoleArea/ConsoleArea';
 import Menu from './components/Menu/Menu';
-import {compileCodeOnServer, evaluateCodeOnServer, retrievetxt} from './api/scripts';
+import {compileCodeOnServer, evaluateCodeOnServer, keywords, retrievetxt} from './api/scripts';
 import 'font-awesome/css/font-awesome.min.css'; // Iconos
 import './App.css';
 

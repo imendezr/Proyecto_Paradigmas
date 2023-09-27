@@ -12,6 +12,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
+const keywordsinfo = require('./predefinedWords.json');// Archivo json con la información de los miembros del equipo
 //const suggestedWords = ['manzana', 'banana', 'cereza', 'dátil', 'kiwi', 'limón'];
 /**
  ## Configuración básica del servidor
@@ -99,6 +100,10 @@ app.get('/getTxt', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
     }
+});
+app.get('/keywords', async (req, res) => {
+        res.json(keywordsinfo);
+
 });
 
 app.get('/about', (_, res) => {
