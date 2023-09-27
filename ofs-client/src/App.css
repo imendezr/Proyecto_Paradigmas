@@ -73,8 +73,8 @@ input, textarea {
 }
 
 .TA textarea{
-    top: 125px;
-    width: 100%;
+    top: 122.4px;
+    width: 50%;
     resize: none;
     padding-left: 20px;
     box-shadow: 0 0 1px var(--border-shadow);
@@ -248,7 +248,7 @@ button, .button {
 .line-numbersTA {
     position: absolute;
     z-index: 1198;
-    top: 125px;
+    top: 123px;
     left: 50%;
     bottom: 0;
     width: 20px; /* Ancho del área de los números de línea */
@@ -272,7 +272,7 @@ button, .button {
 }
 .fieldNamejs{
     width: 100px;
-    top: 105.5px;
+    top: 105px;
 position: absolute;
     background-color: #f0f0f0;
     border: none;
