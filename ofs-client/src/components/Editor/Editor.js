@@ -10,8 +10,8 @@
  */
 
 
-import { keywords, retrieveScript, saveScript} from '../../api/scripts';
-import React, {useEffect, useState, useRef} from 'react';
+import {keywords, retrieveScript, saveScript} from '../../api/scripts';
+import React, {useEffect, useRef, useState} from 'react';
 
 /**
  ## Definición del Componente
@@ -37,21 +37,24 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
      Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la barra de estado.
      */
 
-    const handleSuggestions  = async (inputText) => {
-        if (inputText.trim() === '') {
+    const handleSuggestions = async (inputText) => {
+        const trimmedInput = inputText.trim();
+
+        if (!trimmedInput) {
             setSuggestions([]);
             return;
         }
-        const result =  await keywords();
-        setSuggestions(result.data);
-        const words = inputText.split(/\s+/);
-        const lastWord = words[words.length - 1];
-        const suggestionsList = result.data.filter((word) => {
-            return word.toLowerCase().startsWith(lastWord.toLowerCase());
-        });
+
+        const result = await keywords();
+        const lastWord = trimmedInput.split(/\s+/).pop().toLowerCase();
+
+        const suggestionsList = result.data.filter(word =>
+            word.toLowerCase().startsWith(lastWord)
+        );
 
         setSuggestions(suggestionsList);
     };
+
     const handleSuggestionClick = (suggestion) => {
         const currentContent = code;
         const updatedContent = currentContent ? currentContent + suggestion : suggestion;
@@ -74,7 +77,7 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
      */
 
     const handleRetrieveScript = async () => {
-        !id ? setStatusBarMessage("Error: ingrese un nombre de script para recuperar.") : (async () => {
+        !id ? setStatusBarMessage("Error: ingrese un nombre de script para recuperar.") : await (async () => {
             const result = await retrieveScript(id);
             result.success && onCodeChange(result.code);
             setFileName(id + ".txt");
@@ -89,13 +92,9 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
     };
 
     const getLineNumbers = () => {
-        const lines = code.split('\n');
-        const totalLines = lines.length;
-        const lineNumbers = [];
-        for (let i = 1; i <= totalLines; i++) {
-            lineNumbers.push(<div key={i} className="line-number">{i}</div>);
-        }
-        return lineNumbers;
+        return code.split('\n').map((_, index) => (
+            <div key={index + 1} className="line-number">{index + 1}</div>
+        ));
     };
 
     useEffect(() => {
@@ -123,16 +122,19 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
             <div>
                 <input
                     value={id}
-                    onChange={(e) => {setId(e.target.value); idchange(e.target.value)}}
+                    onChange={(e) => {
+                        setId(e.target.value);
+                        idchange(e.target.value)
+                    }}
                     placeholder="Nombre del script"
                 />
                 <button onClick={handleSaveScript}><i className="fa fa-save"></i></button>
                 <button onClick={handleRetrieveScript}><i className="fa fa-folder-open"></i></button>
             </div>
             <input className="fieldName"
-                value={fileName}
-                placeholder=""
-                readOnly
+                   value={fileName}
+                   placeholder=""
+                   readOnly
             />
             <div className="editor-container">
                 <div ref={lineNumbersRef} className="line-numbers">

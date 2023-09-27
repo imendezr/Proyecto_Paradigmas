@@ -16,7 +16,7 @@ import Output from './components/Output/Output';
 import StatusBar from './components/StatusBar/StatusBar';
 import ConsoleArea from './components/ConsoleArea/ConsoleArea';
 import Menu from './components/Menu/Menu';
-import {compileCodeOnServer, evaluateCodeOnServer, keywords, retrievetxt} from './api/scripts';
+import {compileCodeOnServer, evaluateCodeOnServer, retrievetxt} from './api/scripts';
 import 'font-awesome/css/font-awesome.min.css'; // Iconos
 import './App.css';
 
@@ -42,8 +42,8 @@ function App() {
     const [consoleAreaMessage, setConsoleAreaMessage] = useState('');
     const [transpiled, setTranspiled] = useState('');
     const [preferences, setPreferences] = useState({theme: 'light'});
-    const [id,setid] = useState('');
-    const [filename,setFilename] = useState('');
+    const [id, setid] = useState('');
+    const [filename, setFilename] = useState('');
 
     /**
      ### Actualización de Tema
@@ -93,7 +93,7 @@ function App() {
         !transpiled ? setStatusBarMessage("Error: ingrese el código a evaluar.") : (async () => {
             const result2 = await retrievetxt();
             const result = await evaluateCodeOnServer(result2.content);
-            setStatusBarMessage(result.success ? 'Código evaluado con exito.' :result.message || 'Error al comunicarse con el servidor.');
+            setStatusBarMessage(result.success ? 'Código evaluado con exito.' : result.message || 'Error al comunicarse con el servidor.');
             result.success && setConsoleAreaMessage(result.output)
         })();
     };

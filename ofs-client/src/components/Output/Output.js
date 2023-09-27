@@ -12,10 +12,10 @@
  Se utiliza un área de texto de solo lectura para mostrar el resultado.
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 
 
-const Output = ({ result , filename} ) => {
+const Output = ({result, filename}) => {
     const textareaRef = useRef(null);
     const lineNumbersRef = useRef(null);
 
@@ -26,13 +26,9 @@ const Output = ({ result , filename} ) => {
     };
 
     const getLineNumbers = () => {
-        const lines = result.split('\n');
-        const totalLines = lines.length;
-        const lineNumbers = [];
-        for (let i = 1; i <= totalLines; i++) {
-            lineNumbers.push(<div key={i} className="line-number">{i}</div>);
-        }
-        return lineNumbers;
+        return result.split('\n').map((_, index) => (
+            <div key={index + 1} className="line-number">{index + 1}</div>
+        ));
     };
 
     useEffect(() => {

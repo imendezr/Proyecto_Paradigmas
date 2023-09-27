@@ -35,6 +35,10 @@ body {
     width: 100%;
 }
 
+.Code input {
+    background-color: var(--background-main);
+}
+
 .EA, .TA {
     flex: 1;
     display: flex;
@@ -65,14 +69,14 @@ input, textarea {
     box-shadow: 0 0 10px var(--border-shadow);
 }
 
-.EA textarea{
+.EA textarea {
     width: 100%;
     resize: none;
     padding-left: 20px;
     box-shadow: 0 0 1px var(--border-shadow);
 }
 
-.TA textarea{
+.TA textarea {
     top: 122.4px;
     width: 50%;
     resize: none;
@@ -128,6 +132,7 @@ input, textarea {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .popupContent {
@@ -169,14 +174,14 @@ input, textarea {
     right: 0;
     top: 100%;
     padding: 10px;
-    border: 1px solid var(--border-shadow);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    box-shadow: 0 0 10px var(--border-shadow);
+    box-shadow: 0 0 5px var(--border-shadow);
     border-radius: 20px;
     background: var(--background-container);
     color: var(--text-main);
+    z-index: 900;
 }
 
 button, .button {
@@ -217,15 +222,20 @@ button, .button {
         animation: App-logo-spin infinite 20s linear;
     }
 }
+
 .suggestions-container ul {
     list-style-type: none; /* Quita los marcadores de lista */
     padding: 0; /* Quita el espacio interior */
     display: flex; /* Hace que los elementos de lista se muestren en línea */
+    margin: 1px;
 }
 
 .suggestions-container li {
-    margin-right: 10px; /* Agrega un margen entre los elementos de lista */
+    padding: 0 3px;
+    margin-right: 5px; /* Agrega un margen entre los elementos de lista */
     cursor: pointer; /* Cambia el cursor al pasar sobre los elementos de lista */
+    background-color: var(--button-color);
+    border-radius: 5px;
 }
 
 .editor-container {
@@ -240,22 +250,20 @@ button, .button {
     width: 20px; /* Ancho del área de los números de línea */
     padding: 4px 2px;
     text-align: center;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ccc;
+    background-color: var(--button-color);
     overflow-y: hidden;
 }
 
 .line-numbersTA {
     position: absolute;
-    z-index: 1198;
-    top: 123px;
+    z-index: 950;
+    top: 122.5px;
     left: 50%;
     bottom: 0;
     width: 20px; /* Ancho del área de los números de línea */
     padding: 4px 2px;
     text-align: center;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ccc;
+    background-color: var(--button-color);
     overflow-y: hidden;
 }
 
@@ -264,17 +272,16 @@ button, .button {
     font-size: 11px;
 }
 
-.fieldName{
+.fieldName {
     width: 100px;
     top: 105.5px;
-    background-color: #f0f0f0;
     border: none;
 }
-.fieldNamejs{
+
+.fieldNamejs {
     width: 100px;
     top: 105px;
-position: absolute;
-    background-color: #f0f0f0;
+    position: absolute;
     border: none;
 }
 
