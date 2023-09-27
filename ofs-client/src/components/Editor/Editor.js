@@ -94,37 +94,45 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
         })();
     };
 
+    // Función para manejar el desplazamiento del textarea y sincronizar con los números de línea
     const handleScroll = () => {
-        const textarea = textareaRef.current;
-        const lineNumbers = lineNumbersRef.current;
-        lineNumbers.scrollTop = textarea.scrollTop;
+        const textarea = textareaRef.current; // Obtiene la referencia al textarea
+        const lineNumbers = lineNumbersRef.current; // Obtiene la referencia a los números de línea
+        lineNumbers.scrollTop = textarea.scrollTop; // Sincroniza el desplazamiento vertical de los números de línea con el textarea
     };
 
+// Función para obtener los números de línea basados en el código
     const getLineNumbers = () => {
         return code.split('\n').map((_, index) => (
-            <div key={index + 1} className="line-number">{index + 1}</div>
+            <div key={index + 1} className="line-number">{index + 1}</div> // Crea elementos para cada número de línea
         ));
     };
 
+// Efecto que se ejecuta al cargar o cambiar el código
     useEffect(() => {
-        const textarea = textareaRef.current;
-        const lineNumbers = lineNumbersRef.current;
+        const textarea = textareaRef.current; // Obtiene la referencia al textarea
+        const lineNumbers = lineNumbersRef.current; // Obtiene la referencia a los números de línea
 
+        // Función para actualizar la altura de los números de línea según la altura del textarea
         const updateLineNumbersHeight = () => {
             const textareaComputedStyle = getComputedStyle(textarea);
-            lineNumbers.style.height = textareaComputedStyle.height;
+            lineNumbers.style.height = textareaComputedStyle.height; // Actualiza la altura de los números de línea
         };
 
-        updateLineNumbersHeight();
+        updateLineNumbersHeight(); // Actualiza la altura inicialmente
 
+        // Agrega event listeners para actualizar la altura y sincronizar el desplazamiento
         textarea.addEventListener('input', updateLineNumbersHeight);
         textarea.addEventListener('scroll', handleScroll);
 
+        // Limpia los event listeners cuando el componente se desmonta para evitar pérdidas de memoria
         return () => {
             textarea.removeEventListener('input', updateLineNumbersHeight);
             textarea.removeEventListener('scroll', handleScroll);
         };
-    }, [code]);
+    }, [code]); // El efecto se ejecuta cada vez que el código cambia
+
+
 
     return (
         <div className="EA">
