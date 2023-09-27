@@ -9,10 +9,9 @@
  Utilizamos funciones auxiliares de la API para guardar y recuperar scripts.
  */
 
-import React, {useState} from 'react';
+
 import {compileCodeOnServer, keywords, retrieveScript, saveScript} from '../../api/scripts';
 import React, {useEffect, useState, useRef} from 'react';
-import {retrieveScript, saveScript} from '../../api/scripts';
 
 /**
  ## Definición del Componente
