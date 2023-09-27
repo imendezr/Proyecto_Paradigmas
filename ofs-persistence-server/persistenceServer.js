@@ -12,8 +12,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
-const keywordsinfo = require('./predefinedWords.json');// Archivo json con la información de los miembros del equipo
-//const suggestedWords = ['manzana', 'banana', 'cereza', 'dátil', 'kiwi', 'limón'];
+const keywordsinfo = require('./predefinedWords.json');
 /**
  ## Configuración básica del servidor
 

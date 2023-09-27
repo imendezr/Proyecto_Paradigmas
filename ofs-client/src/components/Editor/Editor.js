@@ -19,6 +19,7 @@ import React, {useEffect, useRef, useState} from 'react';
  El editor recibe dos funciones del componente principal (`App`):
  - `setStatusBarMessage`: Actualizar mensajes en la barra de estado.
  - `onCodeChange`: Notificar cambios en el código.
+ - `idchange`: Notificar cambios en el el id del archivo.
 
  Dentro del componente, gestionamos dos estados principales:
  - `code`: El código actual que el usuario ha escrito o recuperado.
@@ -32,11 +33,10 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
     const lineNumbersRef = useRef(null);
     const [fileName, setFileName] = useState('');
     /**
-     ### Guardar Script
+     ### Manejar sugerencias
 
-     Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la barra de estado.
+     Esta función carga las sugerencias desde el server para luego ser mostradas cunado se neseciten.
      */
-
     const handleSuggestions = async (inputText) => {
         const trimmedInput = inputText.trim();
 
@@ -54,13 +54,22 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
 
         setSuggestions(suggestionsList);
     };
+    /**
+     ### Manejar el click en las sugerencias
 
+     Esta función permite clickear la sugerencia y esta se añadira al codiigo en pantalla.
+     */
     const handleSuggestionClick = (suggestion) => {
         const currentContent = code;
         const updatedContent = currentContent ? currentContent + suggestion : suggestion;
         onCodeChange(updatedContent);
         setSuggestions([]);
     };
+    /**
+     ### Guardar Script
+
+     Esta función guarda el código actual bajo el nombre especificado y muestra un mensaje en la barra de estado.
+     */
     const handleSaveScript = async () => {
         !id ? setStatusBarMessage("Error: ingrese un nombre para el script.") : (async () => {
             const result = await saveScript(id, code);

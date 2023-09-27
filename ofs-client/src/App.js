@@ -115,7 +115,6 @@ function App() {
                     onCodeChange={setCurrentCode}
                     idchange={setid}
                 />
-
                 <Output result={transpiled} filename={filename}/>
             </div>
             <div className="Console">

@@ -57,7 +57,7 @@ const Output = ({result, filename}) => {
                 <input className="fieldNamejs"
                        value={filename}
                        placeholder=""
-                       readOnly // Make this input read-only to display the file name
+                       readOnly
                 />
             </div>
             <div className="line-numbersTA" ref={lineNumbersRef}>
