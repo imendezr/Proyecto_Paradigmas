@@ -11,6 +11,7 @@ https://drive.google.com/file/d/1VAY1MWD2CDmhjzu86sRXkz75tA5AXN_t/view
 
 ## Requisitos previos:
 - Tener instalado Node.js y npm.
+- Tener instalado MySQL.
 
 ## Instrucciones para construir y ejecutar:
 

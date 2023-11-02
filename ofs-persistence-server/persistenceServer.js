@@ -9,23 +9,21 @@
 
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
-const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
+const aboutInfo = require('./about.json');
 const keywordsinfo = require('./predefinedWords.json');
-const {PERSISTENCE_SERVER_PORT, MAIN_SERVER_PORT} = require('../ofs-client/src/config'); // Importa las configuraciones de puerto
+const {PERSISTENCE_SERVER_PORT, MAIN_SERVER_PORT} = require('../ofs-client/src/config');
 
 /**
- ## Configuración básica del servidor
+ ## Configuración BD del servidor
  */
 
-const SCRIPTS_DIR = path.join(__dirname, 'scripts');
-
-/**
- Ahora, creamos el directorio donde se guardarán los scripts si aún no existe.
- */
-
-(fs.existsSync(SCRIPTS_DIR) || fs.mkdirSync(SCRIPTS_DIR));
+const mysql = require('mysql2/promise');
+const DB_CONFIG = {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'ofs_db'
+};
 
 /**
  ## Configuración de Express y CORS
@@ -43,19 +41,23 @@ app.use(cors({
 
 app.use(express.json());
 
-/**
- ## Funciones de ayuda para la persistencia de datos
-
- Estas funciones permiten guardar y leer scripts del disco.
- */
-
-const saveToFile = (id, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
-
-const readFromFile = id =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
-        : null;
+// Capa de abstracción para operaciones CRUD
+const dbLayer = {
+    async save(id, code) {
+        const connection = await mysql.createConnection(DB_CONFIG);
+        await connection.execute('REPLACE INTO scripts (id, code) VALUES (?, ?)', [id, code]);
+        await connection.end();
+    },
+    async retrieve(id) {
+        const connection = await mysql.createConnection(DB_CONFIG);
+        const [rows] = await connection.execute('SELECT code FROM scripts WHERE id = ?', [id]);
+        await connection.end();
+        if (rows.length > 0) {
+            return rows[0].code;
+        }
+        return null;
+    }
+};
 
 /**
  ## Rutas del servidor
@@ -63,70 +65,75 @@ const readFromFile = id =>
  Definimos las rutas que manejarán las operaciones de persistencia.
  */
 
-app.post('/script/save', (req, res) => {
+app.post('/script/save', async (req, res) => {
     const {id, code} = req.body;
-
     try {
-        saveToFile(id, code);
+        await dbLayer.save(id, code);
         res.json({success: true, message: `Script ${id} guardado con éxito.`});
     } catch (error) {
         res.status(500).json({success: false, message: "Error al guardar el script."});
     }
 });
 
-app.get('/script/:id', (req, res) => {
+app.get('/script/:id', async (req, res) => {
     const {id} = req.params;
-
     try {
-        const code = readFromFile(id);
-        code
-            ? res.json({success: true, code})
+        const code = await dbLayer.retrieve(id);
+        code ? res.json({success: true, code})
             : res.status(404).json({success: false, message: `Script ${id} no encontrado.`});
     } catch (error) {
-        console.error("Error al leer el archivo:", error);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
 });
 
 app.get('/getTxt', async (req, res) => {
     try {
-
-        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ra_fake.txt`, 'utf-8');
-        res.json({success: true, content: txtContent});
-        console.log(txtContent);
+        const code = await dbLayer.retrieve('ra_fake');
+        if (code) {
+            res.json({success: true, content: code});
+        } else {
+            res.status(404).json({error: 'No se encontró el script ra_fake.'});
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
+        res.status(500).json({error: 'Error al recuperar el script ra_fake de la base de datos.'});
     }
 });
 
 app.get('/fixed', async (req, res) => {
     try {
         const timestamp = new Date().toISOString();
-        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test.js.txt`, 'utf-8');
-        const out = `//${timestamp}\n${txtContent}`
-        res.json({success: true, content: out});
-        console.log(out);
+        const code = await dbLayer.retrieve('ofs_test.js');
+        const out = code ? `//${timestamp}\n${code}` : null;
+        if (out) {
+            res.json({success: true, content: out});
+        } else {
+            res.status(404).json({error: 'No se encontró el script ofs_test.js.'});
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
+        res.status(500).json({error: 'Error al recuperar el script ofs_test.js de la base de datos.'});
     }
 });
+
 app.get('/fixed2', async (req, res) => {
     try {
         const timestamp = new Date().toISOString();
-        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test2.js.txt`, 'utf-8');
-        const out = `//${timestamp}\n${txtContent}`
-        res.json({success: true, content: out});
-        console.log(out);
+        const code = await dbLayer.retrieve('ofs_test2.js');
+        const out = code ? `//${timestamp}\n${code}` : null;
+        if (out) {
+            res.json({success: true, content: out});
+        } else {
+            res.status(404).json({error: 'No se encontró el script ofs_test2.js.'});
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
+        res.status(500).json({error: 'Error al recuperar el script ofs_test2.js de la base de datos.'});
     }
 });
+
 app.get('/keywords', async (req, res) => {
     res.json(keywordsinfo);
-
 });
 
 app.get('/about', (_, res) => {
