@@ -64,6 +64,28 @@ const compileCodeOnServer = codeToSend =>
             console.error("Error al enviar el código al servidor:", error);
             return {success: false, message: "Error al comunicarse con el servidor."};
         });
+const transFixed = () =>
+    axios.get('http://localhost:3005/api/fixed')
+        .then(response => ({
+            success: response.data.success,
+            content: response.data.content,
+            message: response.data.success
+        }))
+        .catch(error => {
+            console.error("Error al enviar el código al servidor:", error);
+            return {success: false, message: "Error al comunicarse con el servidor e."};
+        });
+const transFixed2 = () =>
+    axios.get('http://localhost:3005/api/fixed2')
+        .then(response => ({
+            success: response.data.success,
+            content: response.data.content,
+            message: response.data.success
+        }))
+        .catch(error => {
+            console.error("Error al enviar el código al servidor:", error);
+            return {success: false, message: "Error al comunicarse con el servidor e."};
+        });
 
 const evaluateCodeOnServer = codeToSend =>
     postToServer('/api/eval', {code: codeToSend})
@@ -84,4 +106,14 @@ const getAboutInfo = () =>
             return {success: false, message: "Error al obtener información."};
         });
 
-export {saveScript, retrieveScript, compileCodeOnServer, getAboutInfo, evaluateCodeOnServer, retrievetxt, keywords};
+export {
+    saveScript,
+    retrieveScript,
+    compileCodeOnServer,
+    getAboutInfo,
+    evaluateCodeOnServer,
+    retrievetxt,
+    keywords,
+    transFixed,
+    transFixed2
+};

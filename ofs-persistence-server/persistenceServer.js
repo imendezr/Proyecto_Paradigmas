@@ -100,6 +100,31 @@ app.get('/getTxt', async (req, res) => {
         res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
     }
 });
+
+app.get('/fixed', async (req, res) => {
+    try {
+        const timestamp = new Date().toISOString();
+        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test.js.txt`, 'utf-8');
+        const out = `//${timestamp}\n${txtContent}`
+        res.json({ success:true, content:out });
+        console.log(out);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+    }
+});
+app.get('/fixed2', async (req, res) => {
+    try {
+        const timestamp = new Date().toISOString();
+        const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test2.js.txt`, 'utf-8');
+        const out = `//${timestamp}\n${txtContent}`
+        res.json({ success:true, content:out });
+        console.log(out);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+    }
+});
 app.get('/keywords', async (req, res) => {
         res.json(keywordsinfo);
 

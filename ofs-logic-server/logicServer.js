@@ -51,7 +51,7 @@ app.post('/compile', (req, res) => {
     res.json({
         success: true,
         input: code,
-        output: `${timestamp}\n${code}`
+        output: `//${timestamp}\n${code}`
     });
 });
 

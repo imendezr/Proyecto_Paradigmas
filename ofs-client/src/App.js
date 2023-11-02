@@ -16,7 +16,7 @@ import Output from './components/Output/Output';
 import StatusBar from './components/StatusBar/StatusBar';
 import ConsoleArea from './components/ConsoleArea/ConsoleArea';
 import Menu from './components/Menu/Menu';
-import {compileCodeOnServer, evaluateCodeOnServer, retrievetxt} from './api/scripts';
+import {compileCodeOnServer, evaluateCodeOnServer, retrievetxt, transFixed, transFixed2} from './api/scripts';
 import 'font-awesome/css/font-awesome.min.css'; // Iconos
 import './App.css';
 
@@ -72,14 +72,37 @@ function App() {
      */
 
     const handleCompile = async () => {
-        !currentCode || !id ? setStatusBarMessage("Error: ingrese el código a compilar.") : (async () => {
-            console.log("Código a enviar:", currentCode);
-            const result = await compileCodeOnServer(currentCode);
-            console.log("Resultado de la compilación:", result);
-            setFilename(id + ".js");
-            setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
-            result.success && setTranspiled(result.output);
-        })();
+        console.log("Código a enviar:", filename);
+
+        const compileFunctions = {
+            "test_1.ofs": async () => {
+                const result = await transFixed();
+                setFilename("ofs_test.js");
+                setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
+                result.success && setTranspiled(result.content);
+            },
+            "test_2.ofs": async () => {
+                const result = await transFixed2();
+                setFilename("ofs_test2.js");
+                setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
+                result.success && setTranspiled(result.content);
+            },
+            default: async () => {
+                if (!currentCode || !id) {
+                    setStatusBarMessage("Error: ingrese el código a compilar.");
+                    return;
+                }
+
+                console.log("Código a enviar:", currentCode);
+                const result = await compileCodeOnServer(currentCode);
+                console.log("Resultado de la compilación:", result);
+                setFilename(id + ".js");
+                setStatusBarMessage(result.success ? 'Código transpilado con éxito.' : result.message || 'Error al comunicarse con el servidor.');
+                result.success && setTranspiled(result.output);
+            }
+        };
+        const compileFunction = compileFunctions[id] || compileFunctions.default;
+        await compileFunction();
     };
 
     /**
@@ -90,12 +113,12 @@ function App() {
      */
 
     const handleEvaluate = async () => {
-        if (!currentCode) {
+        if (!transpiled) {
             setStatusBarMessage("Error: ingrese el código a evaluar.");
         } else {
             try {
                 // Realiza la evaluación del código y obtén la respuesta
-                const response = await evaluateCodeOnServer(currentCode);
+                const response = await evaluateCodeOnServer(transpiled);
                 if (response.success) {
                     // Si la evaluación fue exitosa, actualiza el estado con la respuesta
                     setEvaluationResult(response.output);
@@ -134,7 +157,8 @@ function App() {
             </div>
             <div className="Console">
                 <StatusBar message={statusBarMessage}/>
-                <ConsoleArea message={consoleAreaMessage} onCompile={handleCompile} onEvaluate={handleEvaluate} evaluationResult={evaluationResult} />
+                <ConsoleArea message={consoleAreaMessage} onCompile={handleCompile} onEvaluate={handleEvaluate}
+                             evaluationResult={evaluationResult}/>
             </div>
         </div>
     );

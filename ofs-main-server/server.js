@@ -128,7 +128,24 @@ app.post('/api/compile', async (req, res) => {
         res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
     }
 });
-
+app.get('/api/fixed', async (req, res) => {
+    try {
+        const response = await axios.get('http://localhost:3006/fixed');
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error al comunicarse con el servidor de lógica:", error);
+        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
+    }
+});
+app.get('/api/fixed2', async (req, res) => {
+    try {
+        const response = await axios.get('http://localhost:3006/fixed2');
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error al comunicarse con el servidor de lógica:", error);
+        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
+    }
+});
 app.post('/api/eval', (req, res) => {
     const { code } = req.body;
 
