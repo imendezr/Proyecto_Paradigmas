@@ -16,17 +16,10 @@ const path = require('path');
 /**
  ## Configuración básica del servidor
 
- Establecemos el puerto y la ubicación donde se guardarán los scripts.
+ Establecemos el puerto
  */
 
 const { MAIN_SERVER_PORT, PERSISTENCE_SERVER_PORT, LOGIC_SERVER_PORT, CLIENT_PORT } = require('../ofs-client/src/config');
-const SCRIPTS_DIR = path.join(__dirname, 'scripts');
-
-/**
- Ahora, creamos el directorio donde se guardarán los scripts si aún no existe.
- */
-
-(fs.existsSync(SCRIPTS_DIR) || fs.mkdirSync(SCRIPTS_DIR));
 
 /**
  ## Configuración de Express y CORS
@@ -55,14 +48,6 @@ app.get('/', (_, res) => res.send('Servidor principal OFS en funcionamiento!'));
 /**
  El servidor también permitirá guardar y recuperar scripts por nombre.
  */
-
-const saveToFile = (id, code) =>
-    fs.writeFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), code);
-
-const readFromFile = id =>
-    fs.existsSync(path.join(SCRIPTS_DIR, `${id}.txt`))
-        ? fs.readFileSync(path.join(SCRIPTS_DIR, `${id}.txt`), 'utf8')
-        : null;
 
 app.post('/script/save', async (req, res) => {
     const {id, code} = req.body;
