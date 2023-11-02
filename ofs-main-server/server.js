@@ -129,17 +129,16 @@ app.post('/api/compile', async (req, res) => {
     }
 });
 
-app.post('/api/eval', async (req, res) => {
-    const {code} = req.body;
+app.post('/api/eval', (req, res) => {
+    const { code } = req.body;
+
     try {
-        const response = await axios.post('http://localhost:3001/eval', {code});
-        res.json(response.data);
+        // Evalúa el código y obtén el resultado
+        const result = eval(code);
+        res.json({ success: true, output: result });
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de lógica para evaluación:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error al comunicarse con el servidor de lógica para evaluación."
-        });
+        console.error("Error al evaluar el código en el servidor:", error);
+        res.status(500).json({ success: false, message: "Error al evaluar el código en el servidor." });
     }
 });
 

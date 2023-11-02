@@ -32,6 +32,51 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
     const textareaRef = useRef(null);
     const lineNumbersRef = useRef(null);
     const [fileName, setFileName] = useState('');
+    const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
+    const LineWordCursorInfo = ({ code }) => {
+        const [lineCount, setLineCount] = useState(0);
+        const [wordCount, setWordCount] = useState(0);
+
+
+        useEffect(() => {
+            // Actualiza la cuenta de líneas y palabras cuando cambia el código
+            const lines = code.split('\n');
+            setLineCount(lines.length);
+
+            const words = code.split(/\s+/).filter(Boolean);
+            setWordCount(words.length);
+        }, [code]);
+
+        return (
+            <div className="line-word-cursor-info">
+                <p>líneas: {lineCount} Palabras: {wordCount}  Columna {cursorPosition.column}</p>
+            </div>
+        );
+    };
+
+    const handleCursorPosition = (e) => {
+        const textarea = e.target;
+        const cursorStart = textarea.selectionStart;
+        const lines = textarea.value.split('\n');
+        let currentLine = 0;
+
+        for (let i = 0; i < lines.length; i++) {
+            const lineLength = lines[i].length + 1; // +1 para contar el carácter de salto de línea
+            if (cursorStart < currentLine + lineLength) {
+                const column = cursorStart - currentLine + 1;
+                const line = i + 1;
+                setCursorPosition({ line, column });
+                break;
+            }
+            currentLine += lineLength;
+        }
+        return (
+            <div className="line-word-cursor-info">
+                <p>Posición del cursor: Línea {cursorPosition.line}, Columna {cursorPosition.column}</p>
+            </div>
+        );
+    };
+
     /**
      ### Manejar sugerencias
 
@@ -165,10 +210,12 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
                         handleSuggestions(e.target.value);
                     }}
                     onScroll={handleScroll}
+                    onMouseMove={handleCursorPosition}
                     rows="10"
                     cols="50"
                 ></textarea>
             </div>
+
             <div className="suggestions-container">
                 <ul>
                     {suggestions.map((suggestion, index) => (
@@ -178,6 +225,7 @@ const Editor = ({code, setStatusBarMessage, onCodeChange, idchange}) => {
                     ))}
                 </ul>
             </div>
+            <LineWordCursorInfo code={code} />
         </div>
     );
 };

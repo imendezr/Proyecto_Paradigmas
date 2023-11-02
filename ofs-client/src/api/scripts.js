@@ -68,13 +68,12 @@ const compileCodeOnServer = codeToSend =>
 const evaluateCodeOnServer = codeToSend =>
     postToServer('/api/eval', {code: codeToSend})
         .then(response => ({
-            success: response.success,
-            output: response.success ? response.output : "Error al procesar el código.",
-            message: response.message
+            success: true,
+            output: response.output
         }))
         .catch(error => {
             console.error("Error al evaluar el código en el servidor:", error);
-            return {success: false, message: "Error al comunicarse con el servidor."};
+            return {success: false, message: "Error al comunicarse con el servidor equis de."};
         });
 
 const getAboutInfo = () =>

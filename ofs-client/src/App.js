@@ -44,7 +44,7 @@ function App() {
     const [preferences, setPreferences] = useState({theme: 'light'});
     const [id, setid] = useState('');
     const [filename, setFilename] = useState('');
-
+    const [evaluationResult, setEvaluationResult] = useState('');
     /**
      ### Actualización de Tema
 
@@ -90,12 +90,27 @@ function App() {
      */
 
     const handleEvaluate = async () => {
-        !transpiled ? setStatusBarMessage("Error: ingrese el código a evaluar.") : (async () => {
-            const result2 = await retrievetxt();
-            const result = await evaluateCodeOnServer(result2.content);
-            setStatusBarMessage(result.success ? 'Código evaluado con exito.' : result.message || 'Error al comunicarse con el servidor.');
-            result.success && setConsoleAreaMessage(result.output)
-        })();
+        if (!currentCode) {
+            setStatusBarMessage("Error: ingrese el código a evaluar.");
+        } else {
+            try {
+                // Realiza la evaluación del código y obtén la respuesta
+                const response = await evaluateCodeOnServer(currentCode);
+                if (response.success) {
+                    // Si la evaluación fue exitosa, actualiza el estado con la respuesta
+                    setEvaluationResult(response.output);
+                    setStatusBarMessage('Código evaluado con éxito.');
+                } else {
+                    // Si hubo un error en la evaluación, muestra un mensaje de error
+                    setEvaluationResult('');
+                    setStatusBarMessage(response.message || 'Error al comunicarse con el servidor.');
+                }
+            } catch (error) {
+                console.error("Error al evaluar el código:", error);
+                setEvaluationResult('');
+                setStatusBarMessage('Error al comunicarse con el servidor.');
+            }
+        }
     };
 
     /**
@@ -119,7 +134,7 @@ function App() {
             </div>
             <div className="Console">
                 <StatusBar message={statusBarMessage}/>
-                <ConsoleArea message={consoleAreaMessage} onCompile={handleCompile} onEvaluate={handleEvaluate}/>
+                <ConsoleArea message={consoleAreaMessage} onCompile={handleCompile} onEvaluate={handleEvaluate} evaluationResult={evaluationResult} />
             </div>
         </div>
     );
