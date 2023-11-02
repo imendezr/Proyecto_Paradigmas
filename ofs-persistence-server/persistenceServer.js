@@ -13,13 +13,12 @@ const fs = require('fs');
 const path = require('path');
 const aboutInfo = require('./about.json'); // Archivo json con la información de los miembros del equipo
 const keywordsinfo = require('./predefinedWords.json');
+const {PERSISTENCE_SERVER_PORT, MAIN_SERVER_PORT} = require('../ofs-client/src/config'); // Importa las configuraciones de puerto
+
 /**
  ## Configuración básica del servidor
-
- Establecemos el puerto y la ubicación donde se guardarán los scripts.
  */
 
-const PORT = 3006;
 const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 
 /**
@@ -37,7 +36,7 @@ const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3005',
+    origin: `http://localhost:${MAIN_SERVER_PORT}`, // Modificado para reflejar el puerto correcto
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -93,11 +92,11 @@ app.get('/getTxt', async (req, res) => {
     try {
 
         const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ra_fake.txt`, 'utf-8');
-        res.json({ success:true, content:txtContent });
+        res.json({success: true, content: txtContent});
         console.log(txtContent);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
     }
 });
 
@@ -106,11 +105,11 @@ app.get('/fixed', async (req, res) => {
         const timestamp = new Date().toISOString();
         const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test.js.txt`, 'utf-8');
         const out = `//${timestamp}\n${txtContent}`
-        res.json({ success:true, content:out });
+        res.json({success: true, content: out});
         console.log(out);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
     }
 });
 app.get('/fixed2', async (req, res) => {
@@ -118,15 +117,15 @@ app.get('/fixed2', async (req, res) => {
         const timestamp = new Date().toISOString();
         const txtContent = fs.readFileSync(`${path.join(__dirname, 'scripts')}/ofs_test2.js.txt`, 'utf-8');
         const out = `//${timestamp}\n${txtContent}`
-        res.json({ success:true, content:out });
+        res.json({success: true, content: out});
         console.log(out);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'No se pudo leer el archivo .txt' });
+        res.status(500).json({error: 'No se pudo leer el archivo .txt'});
     }
 });
 app.get('/keywords', async (req, res) => {
-        res.json(keywordsinfo);
+    res.json(keywordsinfo);
 
 });
 
@@ -145,4 +144,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => console.log(`Servidor de persistencia corriendo en http://localhost:${PORT}`));
+app.listen(PERSISTENCE_SERVER_PORT, () => console.log(`Servidor de persistencia corriendo en http://localhost:${PERSISTENCE_SERVER_PORT}`));

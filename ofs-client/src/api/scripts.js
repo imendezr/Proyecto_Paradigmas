@@ -6,7 +6,9 @@
 
 import axios from 'axios';
 
-const SERVER_URL = 'http://localhost:3005';
+const { MAIN_SERVER_PORT } = require('../config');
+
+const SERVER_URL = `http://localhost:${MAIN_SERVER_PORT}`;
 
 /**
  * Envía el script al servidor y devuelve la respuesta.
@@ -38,7 +40,7 @@ const retrieveScript = id =>
         });
 
 const retrievetxt = () =>
-    axios.get(`http://localhost:3005/getTxt`)
+    axios.get(`${SERVER_URL}/getTxt`)
         .then(response => ({
             success: response.data.success,
             content: response.data.content,
@@ -50,8 +52,7 @@ const retrievetxt = () =>
         });
 
 const keywords = () =>
-    axios.get(`http://localhost:3005/keywords`)
-
+    axios.get(`${SERVER_URL}/keywords`)
 
 const compileCodeOnServer = codeToSend =>
     postToServer('/api/compile', {code: codeToSend})
@@ -65,7 +66,7 @@ const compileCodeOnServer = codeToSend =>
             return {success: false, message: "Error al comunicarse con el servidor."};
         });
 const transFixed = () =>
-    axios.get('http://localhost:3005/api/fixed')
+    axios.get(`${SERVER_URL}/api/fixed`)
         .then(response => ({
             success: response.data.success,
             content: response.data.content,
@@ -75,8 +76,9 @@ const transFixed = () =>
             console.error("Error al enviar el código al servidor:", error);
             return {success: false, message: "Error al comunicarse con el servidor e."};
         });
+
 const transFixed2 = () =>
-    axios.get('http://localhost:3005/api/fixed2')
+    axios.get(`${SERVER_URL}/api/fixed2`)
         .then(response => ({
             success: response.data.success,
             content: response.data.content,

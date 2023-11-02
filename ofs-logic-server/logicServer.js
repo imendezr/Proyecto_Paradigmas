@@ -9,14 +9,10 @@
 
 const express = require('express');
 const cors = require('cors');
+const {LOGIC_SERVER_PORT, MAIN_SERVER_PORT} = require('../ofs-client/src/config'); // Importa las configuraciones de puerto
 
 /**
  ## Configuración básica del servidor
-
- Establecemos el puerto para el servidor de lógica.
- */
-
-const PORT = 3001;
 
 /**
  ## Configuración de Express y CORS
@@ -27,7 +23,7 @@ const PORT = 3001;
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3005',
+    origin: `http://localhost:${MAIN_SERVER_PORT}`, // Modificado para reflejar el puerto correcto
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -75,4 +71,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => console.log(`Servidor de lógica corriendo en http://localhost:${PORT}`));
+app.listen(LOGIC_SERVER_PORT, () => console.log(`Servidor de lógica corriendo en http://localhost:${LOGIC_SERVER_PORT}`));

@@ -19,7 +19,7 @@ const path = require('path');
  Establecemos el puerto y la ubicación donde se guardarán los scripts.
  */
 
-const PORT = 3005;
+const { MAIN_SERVER_PORT, PERSISTENCE_SERVER_PORT, LOGIC_SERVER_PORT, CLIENT_PORT } = require('../ofs-client/src/config');
 const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 
 /**
@@ -37,7 +37,7 @@ const SCRIPTS_DIR = path.join(__dirname, 'scripts');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: `http://localhost:${CLIENT_PORT}`,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -68,7 +68,7 @@ app.post('/script/save', async (req, res) => {
     const {id, code} = req.body;
 
     try {
-        const response = await axios.post('http://localhost:3006/script/save', {id, code});
+        const response = await axios.post(`http://localhost:${PERSISTENCE_SERVER_PORT}/script/save`, {id, code});
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error);
@@ -80,7 +80,7 @@ app.get('/script/:id', async (req, res) => {
     const {id} = req.params;
 
     try {
-        const response = await axios.get(`http://localhost:3006/script/${id}`);
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/script/${id}`);
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error.response ? error.response.data : error.message);
@@ -89,28 +89,28 @@ app.get('/script/:id', async (req, res) => {
 });
 
 app.get('/getTxt', async (req, res) => {
-
     try {
-        const response = await axios.get(`http://localhost:3006/getTxt`);
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/getTxt`);
         res.json(response.data);
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de persistencia #4:", error.response ? error.response.data : error.message);
+        console.error("Error al comunicarse con el servidor de persistencia:", error.response ? error.response.data : error.message);
         res.status(500).json({success: false, message: "Error al recuperar el script."});
     }
 });
 
 app.get('/keywords', async (req, res) => {
-
     try {
-        const response = await axios.get(`http://localhost:3006/keywords`);
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/keywords`);
         res.json(response.data);
     } catch (error) {
+        console.error("Error al comunicarse con el servidor de persistencia:", error);
+        res.status(500).json({success: false, message: "Error al obtener las palabras clave."});
     }
 });
 
 app.get('/about', async (_, res) => {
     try {
-        const response = await axios.get('http://localhost:3006/about');
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/about`);
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de persistencia:", error);
@@ -121,41 +121,44 @@ app.get('/about', async (_, res) => {
 app.post('/api/compile', async (req, res) => {
     const {code} = req.body;
     try {
-        const response = await axios.post('http://localhost:3001/compile', {code});
+        const response = await axios.post(`http://localhost:${LOGIC_SERVER_PORT}/compile`, {code});
         res.json(response.data);
     } catch (error) {
         console.error("Error al comunicarse con el servidor de lógica:", error);
         res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
     }
 });
+
 app.get('/api/fixed', async (req, res) => {
     try {
-        const response = await axios.get('http://localhost:3006/fixed');
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/fixed`);
         res.json(response.data);
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de lógica:", error);
-        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
+        console.error("Error al comunicarse con el servidor de persistencia:", error);
+        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de persistencia."});
     }
 });
+
 app.get('/api/fixed2', async (req, res) => {
     try {
-        const response = await axios.get('http://localhost:3006/fixed2');
+        const response = await axios.get(`http://localhost:${PERSISTENCE_SERVER_PORT}/fixed2`);
         res.json(response.data);
     } catch (error) {
-        console.error("Error al comunicarse con el servidor de lógica:", error);
-        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de lógica."});
+        console.error("Error al comunicarse con el servidor de persistencia:", error);
+        res.status(500).json({success: false, message: "Error al comunicarse con el servidor de persistencia."});
     }
 });
+
 app.post('/api/eval', (req, res) => {
-    const { code } = req.body;
+    const {code} = req.body;
 
     try {
         // Evalúa el código y obtén el resultado
         const result = eval(code);
-        res.json({ success: true, output: result });
+        res.json({success: true, output: result});
     } catch (error) {
         console.error("Error al evaluar el código en el servidor:", error);
-        res.status(500).json({ success: false, message: "Error al evaluar el código en el servidor." });
+        res.status(500).json({success: false, message: "Error al evaluar el código en el servidor."});
     }
 });
 
@@ -171,4 +174,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-app.listen(PORT, () => console.log(`Servidor principal corriendo en http://localhost:${PORT}`));
+app.listen(MAIN_SERVER_PORT, () => console.log(`Servidor principal corriendo en http://localhost:${MAIN_SERVER_PORT}`));
